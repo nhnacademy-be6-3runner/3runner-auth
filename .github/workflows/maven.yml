@@ -47,6 +47,16 @@ jobs:
         run: |
           sudo docker-compose push
 
+      - name: Clean target directory on server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_IP }}
+          username: ${{ secrets.SSH_ID }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            rm -rf /home/${{secrets.SSH_ID}}/auth/*
+
       - name: Copy files to server
         uses: appleboy/scp-action@master
         with:
