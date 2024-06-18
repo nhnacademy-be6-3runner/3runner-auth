@@ -5,12 +5,12 @@ import com.nhnacademy.auth.entity.member.enums.Grade;
 import com.nhnacademy.auth.entity.member.enums.Status;
 import com.nhnacademy.auth.entity.memberAuth.MemberAuth;
 import com.nhnacademy.auth.entity.pointRecord.PointRecord;
+import com.nhnacademy.auth.member.dto.CreateAddressRequest;
+import com.nhnacademy.auth.member.dto.CreateMemberRequest;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.ZonedDateTime;
 import java.util.HashSet;
@@ -18,8 +18,9 @@ import java.util.Set;
 
 @Entity
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Setter
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -71,5 +72,19 @@ public class Member {
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL,orphanRemoval = true)
     private Set<PointRecord> pointSet = new HashSet<>();
 
+    public Member(CreateMemberRequest request){
+        this.setPassword(request.password());
+        this.setPoint(5000L);
+        this.setName(request.name());
+        this.setAge(request.age());
+        this.setStatus(Status.Active);
+        this.setPhone(request.phone());
+        this.setEmail(request.email());
+        this.setBirthday(request.birthday());
+        this.setGrade(Grade.General);
+        this.setCreated_at(ZonedDateTime.now());
+
+
+    }
 
 }
