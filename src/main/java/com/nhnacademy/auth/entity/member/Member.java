@@ -1,12 +1,11 @@
 package com.nhnacademy.auth.entity.member;
 
 import com.nhnacademy.auth.entity.address.Address;
+import com.nhnacademy.auth.entity.member.dto.CreateMemberRequest;
 import com.nhnacademy.auth.entity.member.enums.Grade;
 import com.nhnacademy.auth.entity.member.enums.Status;
 import com.nhnacademy.auth.entity.memberAuth.MemberAuth;
 import com.nhnacademy.auth.entity.pointRecord.PointRecord;
-import com.nhnacademy.auth.member.dto.CreateAddressRequest;
-import com.nhnacademy.auth.member.dto.CreateMemberRequest;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

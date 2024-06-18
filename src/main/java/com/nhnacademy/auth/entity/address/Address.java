@@ -1,8 +1,8 @@
 package com.nhnacademy.auth.entity.address;
 
 
+import com.nhnacademy.auth.entity.address.dto.CreateAddressRequest;
 import com.nhnacademy.auth.entity.member.Member;
-import com.nhnacademy.auth.member.dto.CreateAddressRequest;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -43,7 +43,7 @@ public class Address {
     @NotNull
     private String postalCode;
 
-    public Address(CreateAddressRequest request,Member member) {
+    public Address(CreateAddressRequest request, Member member) {
         this.setMember(member);
         this.setName(request.name());
         this.setCountry(request.country());

@@ -1,14 +1,9 @@
 package com.nhnacademy.auth.member.service;
 
-import com.nhnacademy.auth.entity.address.Address;
 import com.nhnacademy.auth.entity.auth.Auth;
-import com.nhnacademy.auth.entity.member.Member;
-import com.nhnacademy.auth.member.repository.AddressRepository;
 import com.nhnacademy.auth.member.repository.AuthRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service

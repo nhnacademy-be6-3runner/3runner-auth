@@ -1,10 +1,8 @@
-package com.nhnacademy.auth.member.dto;
+package com.nhnacademy.auth.entity.member.dto;
 
-import com.nhnacademy.auth.entity.member.enums.Grade;
-import com.nhnacademy.auth.entity.member.enums.Status;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
-import lombok.Value;
 
 import java.time.ZonedDateTime;
 
@@ -14,7 +12,7 @@ import java.time.ZonedDateTime;
  * The type Create member request.-회원가입에 대한 요청 record이다.
  */
 @Builder
-public record CreateMemberRequest (
+public record CreateMemberRequest(
     @NotNull(message = "이메일을 입력해주세요.")
     String email,
 

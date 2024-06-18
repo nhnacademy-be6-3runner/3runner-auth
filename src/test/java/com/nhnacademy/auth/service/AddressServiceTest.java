@@ -1,10 +1,11 @@
-package com.nhnacademy.auth.member.service;
+package com.nhnacademy.auth.service;
 
+import com.nhnacademy.auth.address.repository.AddressRepository;
+import com.nhnacademy.auth.address.service.AddressService;
 import com.nhnacademy.auth.entity.address.Address;
+import com.nhnacademy.auth.entity.address.dto.CreateAddressRequest;
 import com.nhnacademy.auth.entity.member.Member;
-import com.nhnacademy.auth.member.dto.CreateAddressRequest;
-import com.nhnacademy.auth.member.dto.CreateMemberRequest;
-import com.nhnacademy.auth.member.repository.AddressRepository;
+import com.nhnacademy.auth.entity.member.dto.CreateMemberRequest;
 import com.nhnacademy.auth.member.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

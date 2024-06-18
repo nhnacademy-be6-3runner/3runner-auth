@@ -13,17 +13,22 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.ZonedDateTime;
 
+/**
+ * The type Member service.
+ *
+ * @author okeio, 유지아
+ */
 @RequiredArgsConstructor
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
 
     /**
-     * @Author -유지아
-     * Save member. -멤버값을 받아와 저장한다.(이메일 중복하는걸로 확인하면 좋을듯)
+     * Save member.
      *
      * @param member the member -Member값을 받아온다.
      * @return the member -저장 후 member값을 그대로 반환한다.
+     * @author 유지아 Save member. -멤버값을 받아와 저장한다.(이메일 중복하는걸로 확인하면 좋을듯)
      */
     public Member save(Member member) {
         //이메일 중복 확인안해도 되려나,,
@@ -31,11 +36,11 @@ public class MemberService {
     }
 
     /**
-     * @Author -유지아
-     * Find by id member. -memberid를 받아 멤버자체를 가져온다.
+     * Find by id member.
      *
      * @param id the id -long형인 memberid를 받는다.
      * @return the member -member 반환
+     * @author 유지아 Find by id member. -memberid를 받아 멤버자체를 가져온다.
      */
     public Member findById(Long id) {
         if(memberRepository.findById(id).isPresent()){
@@ -46,12 +51,12 @@ public class MemberService {
     }
 
     /**
-     * @Author -유지아
-     * Find by email and password member. -이메일과 패스워드 값으로 조회한다.
+     * Find by email and password member.
      *
      * @param email    the email -string 이메일 값을 받는다.
      * @param password the password -string 비밀번호 값을 받는다.
      * @return the member -해당하는 member를 반환한다.
+     * @author 유지아 Find by email and password member. -이메일과 패스워드 값으로 조회한다.
      */
     public Member findByEmailAndPassword(String email, String password) {
         if(memberRepository.findByEmailAndPassword(email,password) !=null){
@@ -67,6 +72,7 @@ public class MemberService {
      * @param memberId            the member id
      * @param updateMemberRequest password, name, age, phone, email, birthday
      * @return the member
+     * @author okeio
      */
     public Member updateMember(String memberId, UpdateMemberRequest updateMemberRequest) {
         Long id = Long.parseLong(memberId);
@@ -87,6 +93,7 @@ public class MemberService {
      * 멤버 탈퇴
      *
      * @param memberId the member id
+     * @author okeio
      */
     public void deleteMember(String memberId) {
         Long id = Long.parseLong(memberId);
@@ -104,6 +111,7 @@ public class MemberService {
      * @param memberId the member id
      * @param status   the status
      * @return the member
+     * @author okeio
      */
     public Member updateStatus(String memberId, Status status) {
         Long id = Long.parseLong(memberId);
@@ -119,6 +127,7 @@ public class MemberService {
      * @param memberId the member id
      * @param grade    the grade
      * @return the member
+     * @author okeio
      */
     public Member updateGrade(String memberId, Grade grade) {
         Long id = Long.parseLong(memberId);

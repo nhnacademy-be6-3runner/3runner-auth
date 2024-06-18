@@ -1,10 +1,8 @@
-package com.nhnacademy.auth.member.dto;
+package com.nhnacademy.auth.entity.address.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
-
-import java.time.ZonedDateTime;
 
 /**
  * @Author -유지아
