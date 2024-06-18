@@ -2,6 +2,7 @@ package com.nhnacademy.auth.entity.address;
 
 
 import com.nhnacademy.auth.entity.member.Member;
+import com.nhnacademy.auth.member.dto.CreateAddressRequest;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -11,8 +12,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter
 @Builder
+@Setter
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,4 +43,13 @@ public class Address {
     @NotNull
     private String postalCode;
 
+    public Address(CreateAddressRequest request,Member member) {
+        this.setMember(member);
+        this.setName(request.name());
+        this.setCountry(request.country());
+        this.setCity(request.city());
+        this.setState(request.state());
+        this.setRoad(request.road());
+        this.setPostalCode(request.postalCode());
+    }
 }

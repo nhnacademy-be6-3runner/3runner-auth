@@ -4,15 +4,13 @@ import com.nhnacademy.auth.entity.auth.Auth;
 import com.nhnacademy.auth.entity.member.Member;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Getter
+@Setter
 public class MemberAuth {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
