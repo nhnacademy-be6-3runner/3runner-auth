@@ -8,9 +8,7 @@ import com.nhnacademy.auth.entity.pointRecord.PointRecord;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.ZonedDateTime;
 import java.util.HashSet;
@@ -20,6 +18,8 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
+@Builder
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,6 +43,7 @@ public class Member {
     private String phone;
 
     @NotNull
+    @Column(unique = true)
     private String email;
 
     private ZonedDateTime birthday;
