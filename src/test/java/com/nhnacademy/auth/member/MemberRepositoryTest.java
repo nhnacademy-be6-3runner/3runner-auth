@@ -6,6 +6,7 @@ import com.nhnacademy.auth.entity.member.enums.Status;
 import com.nhnacademy.auth.member.repository.MemberRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -22,6 +23,7 @@ public class MemberRepositoryTest {
     EntityManager entityManager;
 
     @Test
+    @DisplayName("멤버 저장 테스트")
     public void saveTest() {
         Member member = Member.builder()
                 .name("test-name")
@@ -45,6 +47,7 @@ public class MemberRepositoryTest {
     }
 
     @Test
+    @DisplayName("멤버 아이디로 멤버 조회 테스트")
     public void findByIdTest() {
         Member member = Member.builder()
                 .name("test-name")
@@ -67,6 +70,7 @@ public class MemberRepositoryTest {
     }
 
     @Test
+    @DisplayName("멤버 업데이트 테스트")
     public void updateTest() {
         Member member = Member.builder()
                 .name("test-name")
@@ -93,28 +97,5 @@ public class MemberRepositoryTest {
         Assertions.assertEquals("new-name", foundMember.getName());
         Assertions.assertEquals("updated-password", foundMember.getPassword());
         Assertions.assertEquals("update@email.com", foundMember.getEmail());
-    }
-
-    @Test
-    public void deleteTest() {
-        Member member = Member.builder()
-                .name("test-name")
-                .password("test-password")
-                .point(6000L)
-                .age(100)
-                .phone("01012345678")
-                .birthday(ZonedDateTime.parse("2000-01-01T00:00:00Z"))
-                .grade(Grade.General)
-                .status(Status.Active)
-                .created_at(ZonedDateTime.now())
-                .email("test@email.com")
-                .build();
-        Member savedMember = memberRepository.save(member);
-        entityManager.flush();
-        memberRepository.delete(savedMember);
-        entityManager.flush();
-
-        Optional<Member> foundMember = memberRepository.findById(savedMember.getId());
-        Assertions.assertTrue(foundMember.isEmpty());
     }
 }

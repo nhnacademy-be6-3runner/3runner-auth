@@ -16,6 +16,13 @@ public class MemberController {
         this.memberService = memberService;
     }
 
+    /**
+     * 멤버 업데이트
+     *
+     * @param memberId            멤버 id
+     * @param updateMemberRequest password, name, age, phone, email, birthday
+     * @return the api response - updateMemberResponse
+     */
     @PutMapping("/members")
     public ApiResponse<UpdateMemberResponse> updateMember(@RequestHeader(name = "Member-Id") String memberId,
                                                              @Valid @RequestBody UpdateMemberRequest updateMemberRequest) {
@@ -30,6 +37,12 @@ public class MemberController {
         }
     }
 
+    /**
+     * 멤버 탈퇴 처리
+     *
+     * @param memberId 멤버 id
+     * @return the api response - Void
+     */
     @DeleteMapping("/members")
     public ApiResponse<Void> deleteMember(@RequestHeader(name = "Member-Id") String memberId) {
         try {

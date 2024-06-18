@@ -6,6 +6,7 @@ import com.nhnacademy.auth.entity.member.dto.UpdateMemberRequest;
 import com.nhnacademy.auth.member.controller.MemberController;
 import com.nhnacademy.auth.member.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,7 @@ public class MemberControllerTest {
     }
 
     @Test
+    @DisplayName("멤버 업데이트 테스트")
     public void testMemberUpdate() throws Exception {
         UpdateMemberRequest updateMemberRequest = UpdateMemberRequest.builder()
                 .password("newPassword")
@@ -75,6 +77,7 @@ public class MemberControllerTest {
     }
 
     @Test
+    @DisplayName("멤버 삭제(탈퇴) 테스트")
     public void testMemberDelete() throws Exception {
         Mockito.doNothing().when(memberService).deleteMember(anyString());
 

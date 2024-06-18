@@ -6,6 +6,7 @@ import com.nhnacademy.auth.address.service.AddressService;
 import com.nhnacademy.auth.entity.address.Address;
 import com.nhnacademy.auth.entity.address.dto.UpdateAddressRequest;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -33,6 +34,7 @@ public class AddressServiceTest {
     }
 
     @Test
+    @DisplayName("주소 업데이트 테스트")
     void updateAddressTest() {
         // Given
         String addressId = "1";
@@ -68,7 +70,8 @@ public class AddressServiceTest {
     }
 
     @Test
-    void updateAddress_NotFoundTest() {
+    @DisplayName("주소 업데이트 시 주소가 없는 경우")
+    void updateAddress_NotExistsTest() {
         // Given
         String addressId = "1";
         UpdateAddressRequest updateAddressRequest = UpdateAddressRequest.builder()
@@ -86,6 +89,7 @@ public class AddressServiceTest {
     }
 
     @Test
+    @DisplayName("주소 삭제 테스트")
     void deleteAddressTest() {
         // Given
         String addressId = "1";

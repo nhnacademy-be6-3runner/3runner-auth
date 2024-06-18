@@ -12,6 +12,13 @@ public class AddressService {
     @Autowired
     private AddressRepository addressRepository;
 
+    /**
+     * Update address.
+     *
+     * @param addressId            주소 id
+     * @param updateAddressRequest name, country, city, state, road, postalCode
+     * @return the address
+     */
     public Address updateAddress(String addressId, UpdateAddressRequest updateAddressRequest) {
         Long id = Long.parseLong(addressId);
         Address address = addressRepository.findById(id).orElseThrow(() -> new AddressNotExistsException());
@@ -26,6 +33,11 @@ public class AddressService {
         return addressRepository.save(address);
     }
 
+    /**
+     * Delete address.
+     *
+     * @param addressId 주소 id
+     */
     public void deleteAddress(String addressId) {
         Long id = Long.parseLong(addressId);
         addressRepository.deleteById(id);

@@ -8,6 +8,7 @@ import com.nhnacademy.auth.entity.member.enums.Status;
 import com.nhnacademy.auth.member.repository.MemberRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -26,6 +27,7 @@ public class AddressRepositoryTest {
     private MemberRepository memberRepository;
 
     @Test
+    @DisplayName("주소 업데이트 테스트")
     public void updateTest() {
         Member member = Member.builder()
                 .name("test-name")
@@ -68,6 +70,7 @@ public class AddressRepositoryTest {
     }
 
     @Test
+    @DisplayName("주소 삭제 테스트")
     public void deleteTest() {
         Member member = Member.builder()
                 .name("test-name")

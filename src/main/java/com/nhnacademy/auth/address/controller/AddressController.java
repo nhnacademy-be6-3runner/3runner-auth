@@ -15,6 +15,13 @@ public class AddressController {
     @Autowired
     private AddressService addressService;
 
+    /**
+     * 주소 업데이트
+     *
+     * @param addressId            the address id
+     * @param updateAddressRequest name, country, city, state, road, postalCode
+     * @return the api response - UpdateAddressResponse DTO
+     */
     @PutMapping("/members/addresses")
     public ApiResponse<UpdateAddressResponse> updateAddress(@RequestHeader(name = "Address-Id") String addressId,
                                                             @RequestBody UpdateAddressRequest updateAddressRequest) {
@@ -31,6 +38,13 @@ public class AddressController {
         }
     }
 
+
+    /**
+     * 주소 삭제
+     *
+     * @param addressId the address id
+     * @return the api response - Void
+     */
     @DeleteMapping("/members/addresses")
     public ApiResponse<Void> deleteAddress(@RequestHeader(name = "Address-Id") String addressId) {
         try {

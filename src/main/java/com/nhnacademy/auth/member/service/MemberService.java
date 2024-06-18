@@ -17,6 +17,13 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
+    /**
+     * 멤버 업데이트
+     *
+     * @param memberId            the member id
+     * @param updateMemberRequest password, name, age, phone, email, birthday
+     * @return the member
+     */
     public Member updateMember(String memberId, UpdateMemberRequest updateMemberRequest) {
         Long id = Long.parseLong(memberId);
         Member member = memberRepository.findById(id).orElseThrow(() -> new MemberNotExistsException());
@@ -32,7 +39,11 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
-    // 탈퇴 처리
+    /**
+     * 멤버 탈퇴
+     *
+     * @param memberId the member id
+     */
     public void deleteMember(String memberId) {
         Long id = Long.parseLong(memberId);
         Member member = memberRepository.findById(id).orElseThrow(() -> new MemberNotExistsException());
@@ -43,7 +54,13 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    // update status (활성, 탈퇴, 휴면)
+    /**
+     * Update member's status(활성, 탈퇴, 휴면).
+     *
+     * @param memberId the member id
+     * @param status   the status
+     * @return the member
+     */
     public Member updateStatus(String memberId, Status status) {
         Long id = Long.parseLong(memberId);
         Member member = memberRepository.findById(id).orElseThrow(() -> new MemberNotExistsException());
@@ -52,7 +69,13 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
-    // update grade (general, royal, gold, platinum)
+    /**
+     * Update member's grade(general, royal, gold, platinum).
+     *
+     * @param memberId the member id
+     * @param grade    the grade
+     * @return the member
+     */
     public Member updateGrade(String memberId, Grade grade) {
         Long id = Long.parseLong(memberId);
         Member member = memberRepository.findById(id).orElseThrow(() -> new MemberNotExistsException());

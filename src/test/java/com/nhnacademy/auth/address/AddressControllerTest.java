@@ -6,6 +6,7 @@ import com.nhnacademy.auth.entity.address.Address;
 import com.nhnacademy.auth.entity.address.dto.UpdateAddressRequest;
 import com.nhnacademy.auth.entity.address.dto.UpdateAddressResponse;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,7 @@ public class AddressControllerTest {
     }
 
     @Test
+    @DisplayName("주소 업데이트 테스트")
     void updateAddress() throws Exception {
         Address address = Address.builder()
                 .name("New Address Name")
@@ -68,6 +70,7 @@ public class AddressControllerTest {
     }
 
     @Test
+    @DisplayName("주소 삭제 테스트")
     void deleteAddress() throws Exception {
         Mockito.doNothing().when(addressService).deleteAddress(anyString());
 

@@ -6,6 +6,7 @@ import com.nhnacademy.auth.entity.member.enums.Status;
 import com.nhnacademy.auth.member.repository.MemberRepository;
 import com.nhnacademy.auth.member.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
@@ -33,6 +34,7 @@ class MemberServiceTest {
     }
 
     @Test
+    @DisplayName("멤버 업데이트 테스트")
     void testUpdateMember() {
         // Given
         Long memberId = 1L;
@@ -68,6 +70,7 @@ class MemberServiceTest {
     }
 
     @Test
+    @DisplayName("멤버 삭제 테스트")
     void testDeleteMember() {
         // Given
         Long memberId = 1L;
@@ -90,7 +93,8 @@ class MemberServiceTest {
     }
 
     @Test
-    void testUpdateMemberNotFound() {
+    @DisplayName("멤버 업데이트 시 멤버를 찾지 못한 경우")
+    void testUpdateMemberNotExists() {
         // Given
         String memberId = "999";
         UpdateMemberRequest updateRequest = UpdateMemberRequest.builder().build();
@@ -102,13 +106,14 @@ class MemberServiceTest {
             memberService.updateMember(memberId, updateRequest);
         });
 
-        assertEquals("Member not found", exception.getMessage());
+        assertEquals("Member Not Exists", exception.getMessage());
         verify(memberRepository, times(1)).findById(Long.parseLong(memberId));
         verify(memberRepository, times(0)).save(any(Member.class));
     }
 
     @Test
-    void testDeleteMemberNotFound() {
+    @DisplayName("멤버 삭제 시 멤버를 찾지 못한 경우")
+    void testDeleteMemberNotExists() {
         // Given
         String memberId = "999";
 
@@ -119,7 +124,7 @@ class MemberServiceTest {
             memberService.deleteMember(memberId);
         });
 
-        assertEquals("Member not found", exception.getMessage());
+        assertEquals("Member Not Exists", exception.getMessage());
         verify(memberRepository, times(1)).findById(Long.parseLong(memberId));
         verify(memberRepository, times(0)).save(any(Member.class));
     }
