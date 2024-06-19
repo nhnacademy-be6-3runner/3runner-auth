@@ -1,7 +1,7 @@
 package com.nhnacademy.auth.entity.address;
 
 
-import com.nhnacademy.auth.entity.address.dto.CreateAddressRequest;
+import com.nhnacademy.auth.address.dto.request.CreateAddressRequest;
 import com.nhnacademy.auth.entity.member.Member;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

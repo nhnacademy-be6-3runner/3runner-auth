@@ -1,11 +1,11 @@
 package com.nhnacademy.auth.service;
 
 import com.nhnacademy.auth.address.repository.AddressRepository;
-import com.nhnacademy.auth.address.service.AddressService;
+import com.nhnacademy.auth.address.service.impl.AddressServiceImpl;
 import com.nhnacademy.auth.entity.address.Address;
-import com.nhnacademy.auth.entity.address.dto.CreateAddressRequest;
+import com.nhnacademy.auth.address.dto.request.CreateAddressRequest;
 import com.nhnacademy.auth.entity.member.Member;
-import com.nhnacademy.auth.entity.member.dto.CreateMemberRequest;
+import com.nhnacademy.auth.member.dto.request.CreateMemberRequest;
 import com.nhnacademy.auth.member.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ public class AddressServiceTest {
     private MemberRepository memberRepository;
 
     @InjectMocks
-    private AddressService addressService;
+    private AddressServiceImpl addressServiceImpl;
 
     @BeforeEach
     public void setUp() {
@@ -45,7 +45,7 @@ public class AddressServiceTest {
 
         when(addressRepository.save(any(Address.class))).thenReturn(null);
 
-        addressService.save(address);
+        addressServiceImpl.save(address);
 
 
         //verify(addressRepository).save(any(Address.class));이게 안됌..
@@ -64,7 +64,7 @@ public class AddressServiceTest {
 
         when(addressRepository.findByMember(member)).thenReturn(expectedAddresses);
 
-        List<Address> addresses = addressService.findAll(member);
+        List<Address> addresses = addressServiceImpl.findAll(member);
 
         /*assertThat(addresses).isNotEmpty();
         assertThat(addresses.size()).isEqualTo(1);

@@ -1,13 +1,13 @@
 package com.nhnacademy.auth.address.controller;
 
-import com.nhnacademy.auth.entity.address.dto.CreateAddressRequest;
-import com.nhnacademy.auth.entity.address.dto.UpdateAddressResponse;
+import com.nhnacademy.auth.address.dto.request.CreateAddressRequest;
+import com.nhnacademy.auth.address.dto.response.UpdateAddressResponse;
 import com.nhnacademy.auth.entity.member.Member;
-import com.nhnacademy.auth.member.service.MemberService;
+import com.nhnacademy.auth.member.service.impl.MemberServiceImpl;
 import com.nhnacademy.auth.util.ApiResponse;
-import com.nhnacademy.auth.address.service.AddressService;
+import com.nhnacademy.auth.address.service.impl.AddressServiceImpl;
 import com.nhnacademy.auth.entity.address.Address;
-import com.nhnacademy.auth.entity.address.dto.UpdateAddressRequest;
+import com.nhnacademy.auth.address.dto.request.UpdateAddressRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,13 +19,13 @@ import java.util.List;
 /**
  * The type Address controller.
  *
- * @author okeio, 유지아
+ * @author 오연수, 유지아
  */
 @RestController
 @RequiredArgsConstructor
 public class AddressController {
-    private final MemberService memberService;
-    private final AddressService addressService;
+    private final MemberServiceImpl memberService;
+    private final AddressServiceImpl addressServiceImpl;
 
     /**
      * Create address response entity.
@@ -39,8 +39,8 @@ public class AddressController {
     public ResponseEntity<List<Address>> createAddress(@RequestBody CreateAddressRequest request) {
         Member member = memberService.findById(request.memberId());
         Address address = new Address(request,member);
-        addressService.save(address);
-        return ResponseEntity.ok(addressService.findAll(member));
+        addressServiceImpl.save(address);
+        return ResponseEntity.ok(addressServiceImpl.findAll(member));
     }
 
     /**
@@ -54,7 +54,7 @@ public class AddressController {
     @GetMapping("/address/getAll")
     public ResponseEntity<List<Address>> findAllAddresses(@RequestHeader("member-id") Long memberId) {
         Member member = memberService.findById(memberId);
-        return ResponseEntity.ok(addressService.findAll(member));
+        return ResponseEntity.ok(addressServiceImpl.findAll(member));
     }
     //멤버의 주소를 가져온다.
 
@@ -64,13 +64,13 @@ public class AddressController {
      * @param addressId            the address id
      * @param updateAddressRequest name, country, city, state, road, postalCode
      * @return the api response - UpdateAddressResponse DTO
-     * @author okeio
+     * @author 오연수
      */
     @PutMapping("/members/addresses")
     public ApiResponse<UpdateAddressResponse> updateAddress(@RequestHeader(name = "Address-Id") String addressId,
                                                             @RequestBody UpdateAddressRequest updateAddressRequest) {
         try {
-            Address address = addressService.updateAddress(addressId, updateAddressRequest);
+            Address address = addressServiceImpl.updateAddress(addressId, updateAddressRequest);
             UpdateAddressResponse updateAddressResponse = UpdateAddressResponse.builder()
                     .id(addressId)
                     .name(address.getName())
@@ -88,12 +88,12 @@ public class AddressController {
      *
      * @param addressId the address id
      * @return the api response - Void
-     * @author okeio
+     * @author 오연수
      */
     @DeleteMapping("/members/addresses")
     public ApiResponse<Void> deleteAddress(@RequestHeader(name = "Address-Id") String addressId) {
         try {
-            addressService.deleteAddress(addressId);
+            addressServiceImpl.deleteAddress(addressId);
             return new ApiResponse<>(new ApiResponse.Header(true, HttpStatus.NO_CONTENT.value(), "Address deleted"));
         }
         catch (RuntimeException e) {

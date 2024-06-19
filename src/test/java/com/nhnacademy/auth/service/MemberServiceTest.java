@@ -1,9 +1,9 @@
 package com.nhnacademy.auth.service;
 
 import com.nhnacademy.auth.entity.member.Member;
-import com.nhnacademy.auth.member.dto.CreateMemberRequest;
+import com.nhnacademy.auth.member.dto.request.CreateMemberRequest;
 import com.nhnacademy.auth.member.repository.MemberRepository;
-import com.nhnacademy.auth.member.service.MemberService;
+import com.nhnacademy.auth.member.service.impl.MemberServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -24,7 +24,7 @@ public class MemberServiceTest {
     private MemberRepository memberRepository;
 
     @InjectMocks
-    private MemberService memberService;
+    private MemberServiceImpl memberService;
 
     @BeforeEach
     public void setUp() {

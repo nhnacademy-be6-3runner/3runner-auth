@@ -1,10 +1,10 @@
 package com.nhnacademy.auth.address;
 
 import com.nhnacademy.auth.address.controller.AddressController;
-import com.nhnacademy.auth.address.service.AddressService;
+import com.nhnacademy.auth.address.service.impl.AddressServiceImpl;
 import com.nhnacademy.auth.entity.address.Address;
-import com.nhnacademy.auth.entity.address.dto.UpdateAddressRequest;
-import com.nhnacademy.auth.entity.address.dto.UpdateAddressResponse;
+import com.nhnacademy.auth.address.dto.request.UpdateAddressRequest;
+import com.nhnacademy.auth.address.dto.response.UpdateAddressResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ public class AddressControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    private AddressService addressService;
+    private AddressServiceImpl addressServiceImpl;
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -56,7 +56,7 @@ public class AddressControllerTest {
                 .name("New Address Name")
                 .build();
 
-        Mockito.when(addressService.updateAddress(anyString(), any(UpdateAddressRequest.class)))
+        Mockito.when(addressServiceImpl.updateAddress(anyString(), any(UpdateAddressRequest.class)))
                 .thenReturn(address);
 
         String requestJson = "{ \"name\": \"New Address Name\", \"country\": \"Country\", \"city\": \"City\", \"state\": \"State\", \"road\": \"Road\", \"postalCode\": \"12345\" }";
@@ -72,7 +72,7 @@ public class AddressControllerTest {
     @Test
     @DisplayName("주소 삭제 테스트")
     void deleteAddress() throws Exception {
-        Mockito.doNothing().when(addressService).deleteAddress(anyString());
+        Mockito.doNothing().when(addressServiceImpl).deleteAddress(anyString());
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/members/addresses")
                         .header("Address-Id", "1"))

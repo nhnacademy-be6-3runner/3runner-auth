@@ -1,7 +1,7 @@
 package com.nhnacademy.auth.entity.member;
 
 import com.nhnacademy.auth.entity.address.Address;
-import com.nhnacademy.auth.entity.member.dto.CreateMemberRequest;
+import com.nhnacademy.auth.member.dto.request.CreateMemberRequest;
 import com.nhnacademy.auth.entity.member.enums.Grade;
 import com.nhnacademy.auth.entity.member.enums.Status;
 import com.nhnacademy.auth.entity.memberAuth.MemberAuth;

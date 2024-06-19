@@ -1,4 +1,4 @@
-package com.nhnacademy.auth.entity.member.dto;
+package com.nhnacademy.auth.member.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

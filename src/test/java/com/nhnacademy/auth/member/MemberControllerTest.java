@@ -2,9 +2,9 @@ package com.nhnacademy.auth.member;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.auth.entity.member.Member;
-import com.nhnacademy.auth.entity.member.dto.UpdateMemberRequest;
+import com.nhnacademy.auth.member.dto.request.UpdateMemberRequest;
 import com.nhnacademy.auth.member.controller.MemberController;
-import com.nhnacademy.auth.member.service.MemberService;
+import com.nhnacademy.auth.member.service.impl.MemberServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ public class MemberControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    MemberService memberService;
+    MemberServiceImpl memberService;
 
     private Member member;
 

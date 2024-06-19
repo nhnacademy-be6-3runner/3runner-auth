@@ -1,15 +1,14 @@
 package com.nhnacademy.auth.member.controller;
 
-import com.nhnacademy.auth.entity.member.dto.CreateMemberRequest;
+import com.nhnacademy.auth.member.dto.request.CreateMemberRequest;
 import com.nhnacademy.auth.util.ApiResponse;
 import com.nhnacademy.auth.entity.auth.Auth;
 import com.nhnacademy.auth.entity.member.Member;
-import com.nhnacademy.auth.entity.member.dto.UpdateMemberRequest;
-import com.nhnacademy.auth.entity.memberAuth.MemberAuth;
+import com.nhnacademy.auth.member.dto.request.UpdateMemberRequest;
 import com.nhnacademy.auth.entity.pointRecord.PointRecord;
 import com.nhnacademy.auth.member.service.AuthService;
-import com.nhnacademy.auth.entity.member.dto.UpdateMemberResponse;
-import com.nhnacademy.auth.member.service.MemberService;
+import com.nhnacademy.auth.member.dto.response.UpdateMemberResponse;
+import com.nhnacademy.auth.member.service.impl.MemberServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import jakarta.validation.Valid;
@@ -24,12 +23,12 @@ import com.nhnacademy.auth.member.service.MemberAuthService;
 /**
  * The type Member controller.
  *
- * @author okeio, 유지아
+ * @author 오연수, 유지아
  */
 @RestController
 @RequiredArgsConstructor
 public class MemberController {
-    private final MemberService memberService;
+    private final MemberServiceImpl memberService;
     private final PointService pointRecordService;
     private final AuthService authService;
     private final MemberAuthService memberAuthService;
@@ -98,7 +97,7 @@ public class MemberController {
      * @param memberId            멤버 id
      * @param updateMemberRequest password, name, age, phone, email, birthday
      * @return the api response - updateMemberResponse
-     * @author okeio
+     * @author 오연수
      */
     @PutMapping("/members")
     public ApiResponse<UpdateMemberResponse> updateMember(@RequestHeader(name = "Member-Id") String memberId,
@@ -119,7 +118,7 @@ public class MemberController {
      *
      * @param memberId 멤버 id
      * @return the api response - Void
-     * @author okeio
+     * @author 오연수
      */
     @DeleteMapping("/members")
     public ApiResponse<Void> deleteMember(@RequestHeader(name = "Member-Id") String memberId) {

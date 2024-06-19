@@ -1,10 +1,10 @@
 package com.nhnacademy.auth.member;
 
 import com.nhnacademy.auth.entity.member.Member;
-import com.nhnacademy.auth.entity.member.dto.UpdateMemberRequest;
+import com.nhnacademy.auth.member.dto.request.UpdateMemberRequest;
 import com.nhnacademy.auth.entity.member.enums.Status;
 import com.nhnacademy.auth.member.repository.MemberRepository;
-import com.nhnacademy.auth.member.service.MemberService;
+import com.nhnacademy.auth.member.service.impl.MemberServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,7 +26,7 @@ class MemberServiceTest {
     private MemberRepository memberRepository;
 
     @InjectMocks
-    private MemberService memberService;
+    private MemberServiceImpl memberService;
 
     @BeforeEach
     void setUp() {

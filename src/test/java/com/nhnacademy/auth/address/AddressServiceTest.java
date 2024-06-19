@@ -2,9 +2,9 @@ package com.nhnacademy.auth.address;
 
 import com.nhnacademy.auth.address.exception.AddressNotExistsException;
 import com.nhnacademy.auth.address.repository.AddressRepository;
-import com.nhnacademy.auth.address.service.AddressService;
+import com.nhnacademy.auth.address.service.impl.AddressServiceImpl;
 import com.nhnacademy.auth.entity.address.Address;
-import com.nhnacademy.auth.entity.address.dto.UpdateAddressRequest;
+import com.nhnacademy.auth.address.dto.request.UpdateAddressRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,7 +26,7 @@ public class AddressServiceTest {
     private AddressRepository addressRepository;
 
     @InjectMocks
-    private AddressService addressService;
+    private AddressServiceImpl addressServiceImpl;
 
     @BeforeEach
     void setUp() {
@@ -55,7 +55,7 @@ public class AddressServiceTest {
         when(addressRepository.save(any(Address.class))).thenReturn(address);
 
         // When
-        Address updatedAddress = addressService.updateAddress(addressId, updateAddressRequest);
+        Address updatedAddress = addressServiceImpl.updateAddress(addressId, updateAddressRequest);
 
         // Then
         assertEquals("Updated Name", updatedAddress.getName());
@@ -82,7 +82,7 @@ public class AddressServiceTest {
 
         // When & Then
         assertThrows(AddressNotExistsException.class, () ->
-                addressService.updateAddress(addressId, updateAddressRequest)
+                addressServiceImpl.updateAddress(addressId, updateAddressRequest)
         );
 
         verify(addressRepository, times(1)).findById(anyLong());
@@ -95,7 +95,7 @@ public class AddressServiceTest {
         String addressId = "1";
 
         // When
-        addressService.deleteAddress(addressId);
+        addressServiceImpl.deleteAddress(addressId);
 
         // Then
         verify(addressRepository, times(1)).deleteById(anyLong());

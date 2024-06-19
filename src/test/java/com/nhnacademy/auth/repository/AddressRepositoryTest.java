@@ -2,9 +2,9 @@ package com.nhnacademy.auth.repository;
 
 import com.nhnacademy.auth.address.repository.AddressRepository;
 import com.nhnacademy.auth.entity.address.Address;
-import com.nhnacademy.auth.entity.address.dto.CreateAddressRequest;
+import com.nhnacademy.auth.address.dto.request.CreateAddressRequest;
 import com.nhnacademy.auth.entity.member.Member;
-import com.nhnacademy.auth.entity.member.dto.CreateMemberRequest;
+import com.nhnacademy.auth.member.dto.request.CreateMemberRequest;
 import com.nhnacademy.auth.member.repository.MemberRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
