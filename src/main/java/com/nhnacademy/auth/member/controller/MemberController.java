@@ -1,6 +1,7 @@
 package com.nhnacademy.auth.member.controller;
 
-import com.nhnacademy.auth.member.dto.request.CreateMemberRequest;
+import com.nhnacademy.auth.entity.member.dto.CreateMemberRequest;
+import com.nhnacademy.auth.entity.member.dto.GetMemberResponse;
 import com.nhnacademy.auth.util.ApiResponse;
 import com.nhnacademy.auth.entity.auth.Auth;
 import com.nhnacademy.auth.entity.member.Member;
@@ -18,6 +19,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import com.nhnacademy.auth.member.service.PointService;
 import com.nhnacademy.auth.member.service.MemberAuthService;
+import org.springframework.web.client.HttpClientErrorException;
 
 
 /**
@@ -38,18 +40,22 @@ public class MemberController {
      * Create member response entity.- 회원가입에 사용되는 함수이다.
      *
      * @param request the request - creatememberrequest를 받아 member를 생성한다.
-     * @return the response entity - 멤버 정보에 대한 응답을 담아서 apiresponse로 응답한다.
      * @author 유지아
      */
     @PostMapping("/members")
-    public ResponseEntity<Member> createMember(@RequestBody CreateMemberRequest request) {
-        Member member = new Member(request);
-        Auth auth = authService.getAuth("USER");
+    public ApiResponse<Void> createMember(@RequestBody CreateMemberRequest request) {
+        try {
+                Member member = new Member(request);
+                Auth auth = authService.getAuth("USER");
 
-        PointRecord pointRecord = new PointRecord(null,5000L,5000L,ZonedDateTime.now(),"회원가입 5000포인트 적립.",member);
-        pointRecordService.save(pointRecord);
-        memberAuthService.saveAuth(member,auth);
-        return ResponseEntity.ok(memberService.save(member));
+                PointRecord pointRecord = new PointRecord(null, 5000L, 5000L, ZonedDateTime.now(), "회원가입 5000포인트 적립.", member);
+                pointRecordService.save(pointRecord);
+                memberAuthService.saveAuth(member, auth);
+                memberService.save(member);
+            return ApiResponse.success(null);
+        }catch (RuntimeException e) {
+            return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(),e.getMessage());
+        }
     }
 
     /**
@@ -60,8 +66,24 @@ public class MemberController {
      * @author 유지아
      */
     @GetMapping("/members")
-    public ResponseEntity<Member> findById(@RequestHeader("member-id") Long memberId) {
-        return ResponseEntity.ok(memberService.findById(memberId));
+    public ApiResponse<GetMemberResponse> findById(@RequestHeader("member-id") Long memberId) {
+        try {
+            Member member = memberService.findById(memberId);
+            GetMemberResponse getMemberResponse = GetMemberResponse.builder()
+                    .age(member.getAge())
+                    .grade(member.getGrade())
+                    .point(member.getPoint())
+                    .phone(member.getPhone())
+                    .created_at(member.getCreated_at())
+                    .birthday(member.getBirthday())
+                    .email(member.getEmail())
+                    .name(member.getName())
+                    .password(member.getPassword()).build();
+
+            return ApiResponse.success(getMemberResponse);
+        }catch (RuntimeException e) {
+            return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(),e.getMessage());
+        }
     }
 
     /**
@@ -112,6 +134,8 @@ public class MemberController {
             return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), e.getMessage());
         }
     }
+
+
 
     /**
      * 멤버 탈퇴 처리
