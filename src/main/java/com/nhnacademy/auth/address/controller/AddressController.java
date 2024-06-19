@@ -1,5 +1,6 @@
 package com.nhnacademy.auth.address.controller;
 
+import com.nhnacademy.auth.entity.address.dto.AddressResponse;
 import com.nhnacademy.auth.entity.address.dto.CreateAddressRequest;
 import com.nhnacademy.auth.entity.address.dto.UpdateAddressResponse;
 import com.nhnacademy.auth.entity.member.Member;
@@ -14,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 /**
@@ -29,32 +32,45 @@ public class AddressController {
 
     /**
      * Create address response entity.
-     *
+     * 주소만든다음 가지고있는 모든 주소를 반환한다.
      * @param request the request
      * @author 유지아
      * @return the response entity
      *
      */
-    @PostMapping("/address/create")
-    public ResponseEntity<List<Address>> createAddress(@RequestBody CreateAddressRequest request) {
-        Member member = memberService.findById(request.memberId());
-        Address address = new Address(request,member);
-        addressService.save(address);
-        return ResponseEntity.ok(addressService.findAll(member));
-    }
+    @PostMapping("/members/addresses")
+    public ApiResponse<Set<AddressResponse>> createAddress(@RequestBody CreateAddressRequest request) {
+        try{
+            Member member = memberService.findById(request.memberId());
+            Address address = new Address(request,member);
+            addressService.save(address);
 
+            return ApiResponse.success(addressService.findAll(member).stream().map(a->AddressResponse.builder()
+                    .name(a.getName()).country(a.getCountry()).city(a.getCity()).state(a.getState()).road(a.getRoad()).postalCode(a.getPostalCode())
+                    .build()).collect(Collectors.toSet()));//이거 찾는거에서 오류 해주나? 이것두?
+        }catch (RuntimeException e){
+            return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(),e.getMessage());
+        }
+
+    }
     /**
      * Find all addresses response entity.
-     *
+     * 멤버아이디에 따른 모든 주소를 가져온다.
      * @author 유지아
      * @param memberId the member id
      * @return the response entity
      */
 //주소를 추가한다.
-    @GetMapping("/address/getAll")
-    public ResponseEntity<List<Address>> findAllAddresses(@RequestHeader("member-id") Long memberId) {
-        Member member = memberService.findById(memberId);
-        return ResponseEntity.ok(addressService.findAll(member));
+    @GetMapping("/members/addresses")
+    public ApiResponse<Set<AddressResponse>> findAllAddresses(@RequestHeader("member-id") Long memberId) {
+        try{
+            Member member = memberService.findById(memberId);
+            return ApiResponse.success(addressService.findAll(member).stream().map(a->AddressResponse.builder()
+                    .name(a.getName()).country(a.getCountry()).city(a.getCity()).state(a.getState()).road(a.getRoad()).postalCode(a.getPostalCode())
+                    .build()).collect(Collectors.toSet()));
+        }catch (RuntimeException e){
+            return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(),e.getMessage());
+        }
     }
     //멤버의 주소를 가져온다.
 
