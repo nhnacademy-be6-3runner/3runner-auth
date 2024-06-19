@@ -52,14 +52,14 @@ public class AddressServiceImpl implements AddressService {
      */
     public Address updateAddress(String addressId, UpdateAddressRequest updateAddressRequest) {
         Long id = Long.parseLong(addressId);
-        Address address = addressRepository.findById(id).orElseThrow(() -> new AddressNotExistsException());
+        Address address = addressRepository.findById(id).orElseThrow(AddressNotExistsException::new);
 
-        address.setName(updateAddressRequest.getName());
-        address.setCountry(updateAddressRequest.getCountry());
-        address.setCity(updateAddressRequest.getCity());
-        address.setState(updateAddressRequest.getState());
-        address.setRoad(updateAddressRequest.getRoad());
-        address.setPostalCode(updateAddressRequest.getPostalCode());
+        address.setName(updateAddressRequest.name());
+        address.setCountry(updateAddressRequest.country());
+        address.setCity(updateAddressRequest.city());
+        address.setState(updateAddressRequest.state());
+        address.setRoad(updateAddressRequest.road());
+        address.setPostalCode(updateAddressRequest.postalCode());
 
         return addressRepository.save(address);
     }

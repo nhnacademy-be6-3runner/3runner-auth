@@ -1,7 +1,7 @@
 package com.nhnacademy.auth.member.controller;
 
-import com.nhnacademy.auth.entity.member.dto.CreateMemberRequest;
-import com.nhnacademy.auth.entity.member.dto.GetMemberResponse;
+import com.nhnacademy.auth.member.dto.response.GetMemberResponse;
+import com.nhnacademy.auth.member.dto.request.CreateMemberRequest;
 import com.nhnacademy.auth.util.ApiResponse;
 import com.nhnacademy.auth.entity.auth.Auth;
 import com.nhnacademy.auth.entity.member.Member;
@@ -19,7 +19,6 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import com.nhnacademy.auth.member.service.PointService;
 import com.nhnacademy.auth.member.service.MemberAuthService;
-import org.springframework.web.client.HttpClientErrorException;
 
 
 /**

@@ -1,5 +1,6 @@
 package com.nhnacademy.auth.address.controller;
 
+import com.nhnacademy.auth.address.dto.request.AddressResponse;
 import com.nhnacademy.auth.address.dto.request.CreateAddressRequest;
 import com.nhnacademy.auth.address.dto.response.UpdateAddressResponse;
 import com.nhnacademy.auth.entity.member.Member;
@@ -42,9 +43,9 @@ public class AddressController {
         try{
             Member member = memberService.findById(request.memberId());
             Address address = new Address(request,member);
-            addressService.save(address);
+            addressServiceImpl.save(address);
 
-            return ApiResponse.success(addressService.findAll(member).stream().map(a->AddressResponse.builder()
+            return ApiResponse.success(addressServiceImpl.findAll(member).stream().map(a-> AddressResponse.builder()
                     .name(a.getName()).country(a.getCountry()).city(a.getCity()).state(a.getState()).road(a.getRoad()).postalCode(a.getPostalCode())
                     .build()).collect(Collectors.toSet()));//이거 찾는거에서 오류 해주나? 이것두?
         }catch (RuntimeException e){
@@ -64,7 +65,7 @@ public class AddressController {
     public ApiResponse<Set<AddressResponse>> findAllAddresses(@RequestHeader("member-id") Long memberId) {
         try{
             Member member = memberService.findById(memberId);
-            return ApiResponse.success(addressService.findAll(member).stream().map(a->AddressResponse.builder()
+            return ApiResponse.success(addressServiceImpl.findAll(member).stream().map(a->AddressResponse.builder()
                     .name(a.getName()).country(a.getCountry()).city(a.getCity()).state(a.getState()).road(a.getRoad()).postalCode(a.getPostalCode())
                     .build()).collect(Collectors.toSet()));
         }catch (RuntimeException e){
