@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Random;
 
 @RestController
-@RequestMapping("/auth/member")
+@RequestMapping("/auth")
 public class TestController {
 
-    @GetMapping("/{id}")
-    public ResponseEntity<String> getMember(@PathVariable("id")String id){
+    @GetMapping
+    public ResponseEntity<String> getMember(){
         int age = new Random().ints(20,60 ).findFirst().getAsInt();
         return ResponseEntity.ok("" + age);
     }
