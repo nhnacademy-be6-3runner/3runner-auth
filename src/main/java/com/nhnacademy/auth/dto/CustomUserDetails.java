@@ -2,14 +2,16 @@ package com.nhnacademy.auth.dto;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.nhnacademy.auth.dto.response.MemberAuthResponse;
 
 public class CustomUserDetails implements UserDetails {
-
+	final String ROLE_PREFIX = "ROLE_";
 	private final MemberAuthResponse memberAuthResponse;
 
 	public CustomUserDetails(MemberAuthResponse memberAuthResponse) {
@@ -20,12 +22,11 @@ public class CustomUserDetails implements UserDetails {
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Collection<GrantedAuthority> collection = new ArrayList<>();
 
-		collection.add(new GrantedAuthority() {
-			@Override
-			public String getAuthority() {
-				return memberAuthResponse.auth().getFirst();
-			}
-		});
+		List<String> authorities = memberAuthResponse.auth();
+
+		for (String authority : authorities) {
+			collection.add(new SimpleGrantedAuthority(ROLE_PREFIX + authority));
+		}
 		return collection;
 	}
 
