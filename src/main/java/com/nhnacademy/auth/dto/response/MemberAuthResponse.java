@@ -6,6 +6,11 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
+/**
+ * Bookstore 서버로부터 받아 오는 로그인을 위한 멤버 정보 DTO
+ *
+ * @author 오연수
+ */
 @Builder
 public record MemberAuthResponse(
 	@NotNull String email,

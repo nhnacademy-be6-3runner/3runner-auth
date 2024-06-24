@@ -2,7 +2,7 @@ package com.nhnacademy.auth.filter;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +24,14 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * 커스텀한 인증 필터
+ * /auth/login 경로로 들어오면 동작한다.
+ * email, password 로 로그인 동작하며,
+ * 성공 시 JWT 생성 후 응답 헤더에 Authorization Header 가 추가된다.
+ *
+ * @author 오연수
+ */
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 	private final JWTUtil jwtUtil;
@@ -63,12 +71,16 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		Long memberId = customUserDetails.getMemberId();
 
 		Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();
-		Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
-		GrantedAuthority auth = iterator.next();
-		String authority = auth.getAuthority();
+		String authoritiesString = authorities.stream()
+			.map(GrantedAuthority::getAuthority)
+			.collect(Collectors.joining(","));
 
-		String access = jwtUtil.generateToken("access", username, authority, memberId, 600000L);
-		String refresh = jwtUtil.generateToken("refresh", username, authority, memberId, 86400000L);
+		// Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
+		// GrantedAuthority auth = iterator.next();
+		// String authority = auth.getAuthority();
+
+		String access = jwtUtil.generateToken("access", username, authoritiesString, memberId, 600000L);
+		String refresh = jwtUtil.generateToken("refresh", username, authoritiesString, memberId, 86400000L);
 
 		// jwt 생성후 헤더에 붙여준다.
 		response.addHeader("Authorization", "Bearer " + access);

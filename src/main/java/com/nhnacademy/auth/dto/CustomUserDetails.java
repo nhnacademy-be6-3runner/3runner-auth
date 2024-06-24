@@ -10,6 +10,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.nhnacademy.auth.dto.response.MemberAuthResponse;
 
+/**
+ * 커스텀 유저 디테일 클래스
+ *
+ * @author 오연수
+ */
 public class CustomUserDetails implements UserDetails {
 	final String ROLE_PREFIX = "ROLE_";
 	private final MemberAuthResponse memberAuthResponse;

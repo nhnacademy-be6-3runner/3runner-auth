@@ -11,6 +11,11 @@ import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Jwts;
 
+/**
+ * JWT Utility Class
+ *
+ * @author 오연수
+ */
 @Component
 public class JWTUtil {
 	private final SecretKey secretKey;
@@ -20,6 +25,16 @@ public class JWTUtil {
 			Jwts.SIG.HS256.key().build().getAlgorithm());
 	}
 
+	/**
+	 * Token 을 생성한다.
+	 *
+	 * @param category Access, or Refresh
+	 * @param username 이메일
+	 * @param auth 권한
+	 * @param memberId 멤버 아이디
+	 * @param expiredMs the expired ms
+	 * @return token 값
+	 */
 	public String generateToken(String category, String username, String auth, Long memberId, Long expiredMs) {
 		return Jwts.builder()
 			.claim("category", category)

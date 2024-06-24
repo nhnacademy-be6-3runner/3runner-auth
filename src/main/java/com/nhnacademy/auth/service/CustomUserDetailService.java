@@ -11,6 +11,11 @@ import com.nhnacademy.auth.dto.CustomUserDetails;
 import com.nhnacademy.auth.dto.request.MemberAuthRequest;
 import com.nhnacademy.auth.dto.response.MemberAuthResponse;
 
+/**
+ * 커스텀 유저 디테일 서비스
+ *
+ * @author 오연수
+ */
 @Service
 public class CustomUserDetailService implements UserDetailsService {
 	@Autowired
