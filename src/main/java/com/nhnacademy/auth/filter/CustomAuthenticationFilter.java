@@ -49,7 +49,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws
 		AuthenticationException {
-		// TODO email 과 password request 가져와야 함
 		LoginRequest loginRequest = null;
 		try {
 			loginRequest = objectMapper.readValue(request.getInputStream(), LoginRequest.class);
@@ -74,10 +73,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		String authoritiesString = authorities.stream()
 			.map(GrantedAuthority::getAuthority)
 			.collect(Collectors.joining(","));
-
-		// Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
-		// GrantedAuthority auth = iterator.next();
-		// String authority = auth.getAuthority();
 
 		String access = jwtUtil.generateToken("access", username, authoritiesString, memberId, 600000L);
 		String refresh = jwtUtil.generateToken("refresh", username, authoritiesString, memberId, 86400000L);

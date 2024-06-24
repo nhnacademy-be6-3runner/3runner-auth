@@ -1,5 +1,7 @@
 package com.nhnacademy.auth.service;
 
+import java.util.Objects;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,8 +28,11 @@ public class CustomUserDetailService implements UserDetailsService {
 		MemberAuthResponse response = null;
 		try {
 			response = loginAdapter.memberLogin(new MemberAuthRequest(email));
+			if (Objects.isNull(response)) {
+				// TODO 뭔 처리를 해야..
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new UsernameNotFoundException("이메일로 멤버를 찾을 수 없다.");
 		}
 		return new CustomUserDetails(response);
 	}
