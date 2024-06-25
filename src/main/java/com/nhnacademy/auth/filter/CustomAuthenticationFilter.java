@@ -17,10 +17,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.auth.dto.CustomUserDetails;
 import com.nhnacademy.auth.dto.request.LoginRequest;
 import com.nhnacademy.auth.service.TokenService;
+import com.nhnacademy.auth.util.CookieUtil;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -80,21 +80,12 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
 		// jwt 생성후 헤더에 붙여준다.
 		response.addHeader("Authorization", "Bearer " + access);
-		response.addCookie(createCookie("Refresh", refresh));
+		response.addCookie(CookieUtil.createCookie("Refresh", refresh));
 		response.setStatus(HttpStatus.OK.value());
 		response.setContentType("application/json");
 		response.getWriter().write("{\"token\": \"" + access + "\"}");
 
 		SecurityContextHolder.getContext().setAuthentication(authResult);
-	}
-
-	private Cookie createCookie(String key, String value) {
-		Cookie cookie = new Cookie(key, value);
-		cookie.setMaxAge(24 * 60 * 60);
-		cookie.setHttpOnly(true);
-		cookie.setPath("/");
-
-		return cookie;
 	}
 
 	@Override
