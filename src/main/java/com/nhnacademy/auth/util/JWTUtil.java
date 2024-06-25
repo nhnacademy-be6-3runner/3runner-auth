@@ -46,4 +46,16 @@ public class JWTUtil {
 			.signWith(secretKey)
 			.compact();
 	}
+
+	public String generateTokenWithUuid(String category, String uuid, Long expiredMs) {
+		Date now = new Date();
+
+		return Jwts.builder()
+			.claim("category", category)
+			.claim("uuid", uuid)
+			.issuedAt(now)
+			.expiration(new Date(now.getTime() + expiredMs))
+			.signWith(secretKey)
+			.compact();
+	}
 }

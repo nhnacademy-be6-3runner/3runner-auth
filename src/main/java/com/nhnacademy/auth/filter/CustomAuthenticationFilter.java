@@ -2,7 +2,7 @@ package com.nhnacademy.auth.filter;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.auth.dto.CustomUserDetails;
 import com.nhnacademy.auth.dto.request.LoginRequest;
-import com.nhnacademy.auth.util.JWTUtil;
+import com.nhnacademy.auth.service.TokenService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -34,15 +34,15 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-	private final JWTUtil jwtUtil;
 	private final AuthenticationManager authenticationManager;
 	private final ObjectMapper objectMapper;
+	private final TokenService tokenService;
 
-	public CustomAuthenticationFilter(JWTUtil jwtUtil, AuthenticationManager authenticationManager,
-		ObjectMapper objectMapper) {
-		this.jwtUtil = jwtUtil;
+	public CustomAuthenticationFilter(AuthenticationManager authenticationManager,
+		ObjectMapper objectMapper, TokenService tokenService) {
 		this.authenticationManager = authenticationManager;
 		this.objectMapper = objectMapper;
+		this.tokenService = tokenService;
 		this.setFilterProcessesUrl("/auth/login");
 	}
 
@@ -70,12 +70,13 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		Long memberId = customUserDetails.getMemberId();
 
 		Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();
-		String authoritiesString = authorities.stream()
+		List<String> auths = authorities.stream()
 			.map(GrantedAuthority::getAuthority)
-			.collect(Collectors.joining(","));
+			.toList();
 
-		String access = jwtUtil.generateToken("access", username, authoritiesString, memberId, 600000L);
-		String refresh = jwtUtil.generateToken("refresh", username, authoritiesString, memberId, 86400000L);
+		List<String> tokens = tokenService.generateToken(username, auths, memberId);
+		String access = tokens.get(0);
+		String refresh = tokens.get(1);
 
 		// jwt 생성후 헤더에 붙여준다.
 		response.addHeader("Authorization", "Bearer " + access);

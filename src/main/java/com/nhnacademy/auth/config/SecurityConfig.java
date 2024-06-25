@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.auth.filter.CustomAuthenticationFilter;
+import com.nhnacademy.auth.service.TokenService;
 import com.nhnacademy.auth.util.JWTUtil;
 
 @Configuration
@@ -24,12 +25,14 @@ public class SecurityConfig {
 	private final AuthenticationConfiguration authenticationConfiguration;
 	private final JWTUtil jwtUtil;
 	private final ObjectMapper objectMapper;
+	private final TokenService tokenService;
 
 	public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil,
-		ObjectMapper objectMapper) {
+		ObjectMapper objectMapper, TokenService tokenService) {
 		this.authenticationConfiguration = authenticationConfiguration;
 		this.jwtUtil = jwtUtil;
 		this.objectMapper = objectMapper;
+		this.tokenService = tokenService;
 	}
 
 	@Bean
@@ -62,8 +65,8 @@ public class SecurityConfig {
 		);
 
 		http
-			.addFilterAt(new CustomAuthenticationFilter(jwtUtil, authenticationManager(authenticationConfiguration),
-				objectMapper), UsernamePasswordAuthenticationFilter.class);
+			.addFilterAt(new CustomAuthenticationFilter(authenticationManager(authenticationConfiguration),
+				objectMapper, tokenService), UsernamePasswordAuthenticationFilter.class);
 
 		http
 			.sessionManagement(session -> session

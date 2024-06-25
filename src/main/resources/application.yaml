@@ -18,6 +18,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+  data:
+    redis:
+      host: 133.186.241.167
+      port: 6379
+      database: 15
+      password: "*N2vya7H@muDTwdNMR!"
 
 eureka:
   client:
@@ -41,3 +47,5 @@ management:
 server:
   shutdown: graceful
   port: 8090
+  netty:
+    connection-timeout: 30s
