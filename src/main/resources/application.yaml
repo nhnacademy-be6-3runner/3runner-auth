@@ -9,15 +9,7 @@ spring:
     name: 3runner-auth
   jwt:
     secret: aaaasqwlkljlfasdfqwerafcxvzpojijoijopjewndllllllsserrrrrrwqexc
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/jwt?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
-    username: root
-    password: dlawjddn
 
-  jpa:
-    hibernate:
-      ddl-auto: update
   data:
     redis:
       host: 133.186.241.167
