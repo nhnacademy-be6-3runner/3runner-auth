@@ -16,7 +16,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.auth.dto.CustomUserDetails;
 import com.nhnacademy.auth.dto.request.LoginRequest;
+import com.nhnacademy.auth.dto.response.LoginResponse;
 import com.nhnacademy.auth.service.TokenService;
+import com.nhnacademy.auth.util.ApiResponse;
 import com.nhnacademy.auth.util.CookieUtil;
 
 import jakarta.servlet.FilterChain;
@@ -50,11 +52,16 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws
 		AuthenticationException {
 		LoginRequest loginRequest = null;
+		// ApiResponse<LoginRequest> resp = null;
 		try {
+			// TypeReference<ApiResponse<LoginRequest>> typeRef = new TypeReference<ApiResponse<LoginRequest>>() {
+			// };
 			loginRequest = objectMapper.readValue(request.getInputStream(), LoginRequest.class);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+
+		// LoginRequest loginRequest = resp.getBody().getData();
 
 		UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginRequest.email(),
 			loginRequest.password());
@@ -82,8 +89,13 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		response.addHeader("Authorization", "Bearer " + access);
 		response.addCookie(CookieUtil.createCookie("Refresh", refresh));
 		response.setStatus(HttpStatus.OK.value());
-		response.setContentType("application/json");
-		response.getWriter().write("{\"token\": \"" + access + "\"}");
+
+		// 인증 성공 시 응답 객체 생성
+		ApiResponse<LoginResponse> apiResponse = ApiResponse.success(new LoginResponse("인증 성공"));
+
+		response.setStatus(HttpServletResponse.SC_OK);
+		response.setContentType("application/json;charset=UTF-8");
+		response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
 
 		SecurityContextHolder.getContext().setAuthentication(authResult);
 	}
@@ -91,6 +103,12 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 	@Override
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
 		AuthenticationException failed) throws IOException, ServletException {
+		// 인증 실패 시 응답 객체 생성
+		ApiResponse<LoginResponse> apiResponse = ApiResponse.fail(HttpServletResponse.SC_UNAUTHORIZED,
+			new ApiResponse.Body<>(new LoginResponse("인증 실패")));
+
 		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+		response.setContentType("application/json;charset=UTF-8");
+		response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
 	}
 }

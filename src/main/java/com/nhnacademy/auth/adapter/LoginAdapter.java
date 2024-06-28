@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.nhnacademy.auth.dto.request.MemberAuthRequest;
 import com.nhnacademy.auth.dto.response.MemberAuthResponse;
+import com.nhnacademy.auth.util.ApiResponse;
 
 /**
  * OpenFeign 사용한 로그인 어댑터
@@ -19,5 +20,5 @@ public interface LoginAdapter {
 	 * @return the api response
 	 */
 	@PostMapping("/login")
-	MemberAuthResponse memberLogin(@RequestBody MemberAuthRequest memberAuthRequest);
+	ApiResponse<MemberAuthResponse> memberLogin(@RequestBody MemberAuthRequest memberAuthRequest);
 }
