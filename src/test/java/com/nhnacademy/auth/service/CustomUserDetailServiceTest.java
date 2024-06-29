@@ -16,6 +16,7 @@ import com.nhnacademy.auth.adapter.LoginAdapter;
 import com.nhnacademy.auth.dto.CustomUserDetails;
 import com.nhnacademy.auth.dto.request.MemberAuthRequest;
 import com.nhnacademy.auth.dto.response.MemberAuthResponse;
+import com.nhnacademy.auth.util.ApiResponse;
 
 public class CustomUserDetailServiceTest {
 	@Mock
@@ -34,7 +35,7 @@ public class CustomUserDetailServiceTest {
 		String email = "test@example.com";
 		MemberAuthResponse response = new MemberAuthResponse(email, "password", List.of("USER"), 1L);
 
-		when(loginAdapter.memberLogin(any(MemberAuthRequest.class))).thenReturn(response);
+		when(loginAdapter.memberLogin(any(MemberAuthRequest.class))).thenReturn(ApiResponse.success(response));
 
 		CustomUserDetails userDetails = (CustomUserDetails)customUserDetailService.loadUserByUsername(email);
 

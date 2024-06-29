@@ -58,4 +58,45 @@ public class JWTUtil {
 			.signWith(secretKey)
 			.compact();
 	}
+
+	/**
+	 * JWT 유효 기간(만료 기간) 체크한다.
+	 *
+	 * @param token access token
+	 * @return 유효성
+	 */
+	public Boolean isExpired(String token) {
+
+		return Jwts.parser()
+			.verifyWith(secretKey)
+			.build()
+			.parseSignedClaims(token)
+			.getPayload()
+			.getExpiration()
+			.before(new Date());
+	}
+
+	public String getCategory(String token) {
+		return Jwts.parser()
+			.verifyWith(secretKey)
+			.build()
+			.parseSignedClaims(token)
+			.getPayload()
+			.get("category", String.class);
+	}
+
+	/**
+	 * JWT 에서 멤버의 uuid 를 가져온다.
+	 *
+	 * @param token 토큰
+	 * @return the uuid
+	 */
+	public String getUuid(String token) {
+		return Jwts.parser()
+			.verifyWith(secretKey)
+			.build()
+			.parseSignedClaims(token)
+			.getPayload()
+			.get("uuid", String.class);
+	}
 }

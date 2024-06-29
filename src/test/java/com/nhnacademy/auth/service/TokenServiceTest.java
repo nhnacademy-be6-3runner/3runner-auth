@@ -19,6 +19,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.auth.dto.TokenDetails;
+import com.nhnacademy.auth.service.impl.TokenServiceImpl;
 import com.nhnacademy.auth.util.JWTUtil;
 
 class TokenServiceTest {
@@ -36,7 +37,7 @@ class TokenServiceTest {
 	private ObjectMapper objectMapper;
 
 	@InjectMocks
-	private TokenService tokenService;
+	private TokenServiceImpl tokenService;
 
 	@BeforeEach
 	void setUp() {

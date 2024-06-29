@@ -8,29 +8,25 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.auth.filter.CustomAuthenticationFilter;
 import com.nhnacademy.auth.service.TokenService;
-import com.nhnacademy.auth.util.JWTUtil;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
 	private final AuthenticationConfiguration authenticationConfiguration;
-	private final JWTUtil jwtUtil;
 	private final ObjectMapper objectMapper;
 	private final TokenService tokenService;
 
-	public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil,
+	public SecurityConfig(AuthenticationConfiguration authenticationConfiguration,
 		ObjectMapper objectMapper, TokenService tokenService) {
 		this.authenticationConfiguration = authenticationConfiguration;
-		this.jwtUtil = jwtUtil;
 		this.objectMapper = objectMapper;
 		this.tokenService = tokenService;
 	}
@@ -41,14 +37,9 @@ public class SecurityConfig {
 		return authenticationConfiguration.getAuthenticationManager();
 	}
 
-	//    @Bean
-	//    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-	//        return new BCryptPasswordEncoder();
-	//    }
-
 	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return NoOpPasswordEncoder.getInstance();
+	public BCryptPasswordEncoder bCryptPasswordEncoder() {
+		return new BCryptPasswordEncoder();
 	}
 
 	@Bean
