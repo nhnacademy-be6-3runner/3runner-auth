@@ -47,6 +47,6 @@ public class OAuth2AuthenticationService {
 	}
 	public Mono<JsonNode> getUserDate(String clientId,String accessToken){
 		String url = "https://apis-payco.krp.toastoven.net/payco/friends/find_member_v2.json";
-		return webClient.get().uri(url).header("client_id", clientId).header("access_token", accessToken).retrieve().bodyToMono(JsonNode.class);
+		return webClient.post().uri(url).header("client_id", clientId).header("access_token", accessToken).retrieve().bodyToMono(JsonNode.class);
 	}
 }

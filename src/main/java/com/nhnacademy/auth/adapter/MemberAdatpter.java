@@ -6,13 +6,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.nhnacademy.auth.dto.request.MemberAuthRequest;
 import com.nhnacademy.auth.dto.response.MemberAuthResponse;
-import com.nhnacademy.auth.entity.UserProfile;
-import com.nhnacademy.auth.util.ApiResponse;
-
-@FeignClient(url = "http://localhost:8080/bookstore/members/oauth",name = "PaycoAdapter")
-public interface PaycoAdapter {
-	@PostMapping
-	MemberAuthResponse paycoMember(@RequestBody UserProfile userProfile);
+@FeignClient(url = "http://localhost:8080/bookstore",name = "MemberAdapter")
+public interface MemberAdatpter {
+	@PostMapping("/members/oauth")
+	MemberAuthResponse createMember(@RequestBody MemberAuthRequest request);
 }
-
 

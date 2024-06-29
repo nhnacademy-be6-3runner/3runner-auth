@@ -1,6 +1,7 @@
 package com.nhnacademy.auth.controller;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ import com.nhnacademy.auth.util.ApiResponse;
 import com.nimbusds.jose.shaded.gson.JsonObject;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.constraints.NotNull;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -46,12 +48,20 @@ public class OAuth2Controller {
 		JsonNode jsonNode = oAuth2AuthenticationService.getToken(code).block();
 		String client_id = "3RDUR8qJyORVrsI2PdkInS1";
 		String access_token = Objects.requireNonNull(jsonNode).get("access_token").asText();
-
+		//여기까지는 된다. accessToken가져오는거까지는 됌..
 		//headerparameter에 넘긴다.
 		JsonNode returnData = oAuth2AuthenticationService.getUserDate(client_id,access_token).block();
+		System.out.println(returnData);
 		UserProfile userProfile = new UserProfile(returnData);
 
-		//토큰만든다음 헤더에 넣고 보낸다.
+		//이 정보를 가지고 멤버를 만들어야함...
+		MemberAuthResponse response =paycoAdapter.paycoMember(userProfile);
+		// @NotNull String email,
+		// @NotNull String password,
+		// @NotNull List<String> auth,
+		// @NotNull Long memberId
+
+		//요거로 토큰만든다음 헤더에 넣고 보낸다.
 
 		//발급한 토큰을 header로 보내야하려나? 어캐 넘기지..
 		// 최종 페이지로 리디렉션//아마 gateway로 넘긴다...?그리고 최종페이지로 가는 요청 만들어야할듯?
