@@ -9,10 +9,12 @@ import com.nhnacademy.auth.dto.response.MemberAuthResponse;
 import com.nhnacademy.auth.entity.UserProfile;
 import com.nhnacademy.auth.util.ApiResponse;
 
+import jakarta.validation.Valid;
+
 @FeignClient(url = "http://localhost:8080/bookstore/members/oauth",name = "PaycoAdapter")
 public interface PaycoAdapter {
 	@PostMapping
-	MemberAuthResponse paycoMember(@RequestBody UserProfile userProfile);
+	MemberAuthResponse oauthMember(@RequestBody @Valid UserProfile userProfile);
 }
 
 

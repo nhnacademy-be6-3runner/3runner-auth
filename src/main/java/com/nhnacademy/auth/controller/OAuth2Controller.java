@@ -55,11 +55,12 @@ public class OAuth2Controller {
 		UserProfile userProfile = new UserProfile(returnData);
 
 		//이 정보를 가지고 멤버를 만들어야함...
-		MemberAuthResponse response =paycoAdapter.paycoMember(userProfile);
+		MemberAuthResponse response =paycoAdapter.oauthMember(userProfile);
 		// @NotNull String email,
 		// @NotNull String password,
 		// @NotNull List<String> auth,
 		// @NotNull Long memberId
+
 
 		//요거로 토큰만든다음 헤더에 넣고 보낸다.
 
