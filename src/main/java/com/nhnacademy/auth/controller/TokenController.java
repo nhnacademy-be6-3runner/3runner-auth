@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -19,7 +20,6 @@ import com.nhnacademy.auth.util.CookieUtil;
 import com.nhnacademy.auth.util.JWTUtil;
 
 import io.jsonwebtoken.ExpiredJwtException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -38,19 +38,12 @@ public class TokenController {
 	}
 
 	@PostMapping("/reissue")
-	public ApiResponse<RefreshResponse> reissue(RefreshRequest refreshRequest, HttpServletRequest request,
+	public ApiResponse<RefreshResponse> reissue(@RequestBody RefreshRequest refreshRequest, HttpServletRequest request,
 		HttpServletResponse response) {
 
-		//get refresh token
-		String refresh = null;
-		Cookie[] cookies = request.getCookies();
-		for (Cookie cookie : cookies) {
-			if (cookie.getName().equals("Refresh")) {
-				refresh = cookie.getValue();
-			}
-		}
-		if (refresh == null) {
+		String refresh = refreshRequest.refreshToken();
 
+		if (refresh == null) {
 			return ApiResponse.badRequestFail(new ApiResponse.Body<>(new RefreshResponse("refresh token null", null)));
 		}
 
@@ -63,11 +56,10 @@ public class TokenController {
 				new ApiResponse.Body<>(new RefreshResponse("refresh token expired", null)));
 		}
 
-		// 토큰이 refresh인지 확인 (발급시 페이로드에 명시)
+		// 토큰이 refresh 인지 확인 (발급시 페이로드에 명시)
 		String category = jwtUtil.getCategory(refresh);
 
-		if (!category.equals("refresh")) {
-
+		if (!category.equals("REFRESH")) {
 			return ApiResponse.badRequestFail(
 				new ApiResponse.Body<>(new RefreshResponse("invalid refresh token", null)));
 		}

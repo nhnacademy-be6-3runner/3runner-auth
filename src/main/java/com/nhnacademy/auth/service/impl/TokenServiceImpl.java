@@ -18,18 +18,17 @@ import com.nhnacademy.auth.util.JWTUtil;
 public class TokenServiceImpl implements TokenService {
 	private final String TOKEN_DETAILS = "token_details";
 	private final String REFRESH_TOKEN = "refresh_token";
-	private final Long ACCESS_TOKEN_TTL = 3600000L; // 60 * 60 * 1000
+	private final Long ACCESS_TOKEN_TTL = 6000L; // 60 * 60 * 1000 = 3600000L
 	private final Long REFRESH_TOKEN_TTL = 86400000L;
 	private final JWTUtil jwtUtil;
 
 	private final RedisTemplate<String, Object> redisTemplate;
 
-	private final ObjectMapper objectMapper;
+	ObjectMapper objectMapper = new ObjectMapper();
 
-	public TokenServiceImpl(JWTUtil jwtUtil, RedisTemplate<String, Object> redisTemplate, ObjectMapper objectMapper) {
+	public TokenServiceImpl(JWTUtil jwtUtil, RedisTemplate<String, Object> redisTemplate) {
 		this.jwtUtil = jwtUtil;
 		this.redisTemplate = redisTemplate;
-		this.objectMapper = objectMapper;
 	}
 
 	@Override
@@ -53,7 +52,12 @@ public class TokenServiceImpl implements TokenService {
 
 	@Override
 	public TokenDetails getTokenDetails(String uuid) {
-		return (TokenDetails)redisTemplate.opsForHash().get(TOKEN_DETAILS, uuid);
+		String data = (String)redisTemplate.opsForHash().get(TOKEN_DETAILS, uuid);
+		try {
+			return objectMapper.readValue(data, TokenDetails.class);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override

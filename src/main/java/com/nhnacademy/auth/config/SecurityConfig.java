@@ -15,21 +15,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.auth.filter.CustomAuthenticationFilter;
 import com.nhnacademy.auth.service.TokenService;
-import com.nhnacademy.auth.util.JWTUtil;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
 	private final AuthenticationConfiguration authenticationConfiguration;
-	private final JWTUtil jwtUtil;
 	private final ObjectMapper objectMapper;
 	private final TokenService tokenService;
 
-	public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil,
+	public SecurityConfig(AuthenticationConfiguration authenticationConfiguration,
 		ObjectMapper objectMapper, TokenService tokenService) {
 		this.authenticationConfiguration = authenticationConfiguration;
-		this.jwtUtil = jwtUtil;
 		this.objectMapper = objectMapper;
 		this.tokenService = tokenService;
 	}
@@ -44,11 +41,6 @@ public class SecurityConfig {
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-
-	// @Bean
-	// public PasswordEncoder passwordEncoder() {
-	// 	return NoOpPasswordEncoder.getInstance();
-	// }
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

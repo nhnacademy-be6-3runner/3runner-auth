@@ -1,7 +1,5 @@
 package com.nhnacademy.auth.service;
 
-import java.util.Objects;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,10 +30,10 @@ public class CustomUserDetailService implements UserDetailsService {
 		ApiResponse<MemberAuthResponse> response = null;
 		try {
 			response = loginAdapter.memberLogin(new MemberAuthRequest(email));
-			if (Objects.isNull(response)) {
-				// TODO 뭔 처리를 해야..
-				log.warn("response 값 비어있음");
-			}
+			// if (response.getHeader().getResultCode() == HttpStatus.UNAUTHORIZED.value()) {
+			// 	log.warn("token 만료");
+			//
+			// }
 		} catch (Exception e) {
 			throw new UsernameNotFoundException("이메일로 멤버를 찾을 수 없다.");
 		}
