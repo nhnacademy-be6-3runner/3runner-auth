@@ -1,11 +1,16 @@
 package com.nhnacademy.auth.controller;
 
 import java.net.URI;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,17 +19,25 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.auth.adapter.PaycoAdapter;
+import com.nhnacademy.auth.dto.CustomUserDetails;
+import com.nhnacademy.auth.dto.response.LoginResponse;
 import com.nhnacademy.auth.dto.response.MemberAuthResponse;
 import com.nhnacademy.auth.entity.UserProfile;
 import com.nhnacademy.auth.service.OAuth2AuthenticationService;
 import com.nhnacademy.auth.service.TokenService;
 import com.nhnacademy.auth.service.UserProfileService;
 import com.nhnacademy.auth.util.ApiResponse;
+import com.nhnacademy.auth.util.CookieUtil;
 import com.nimbusds.jose.shaded.gson.JsonObject;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.NotNull;
 import reactor.core.publisher.Mono;
@@ -35,37 +48,52 @@ public class OAuth2Controller {
 	private final UserProfileService userProfileService;
 	private final PaycoAdapter paycoAdapter;
 	private final TokenService tokenService;
-	public OAuth2Controller(OAuth2AuthenticationService oAuth2AuthenticationService, UserProfileService userProfileService,PaycoAdapter paycoAdapter,TokenService tokenService) {
+	private final ObjectMapper objectMapper;
+	private final AuthenticationManager authenticationManager;
+	public OAuth2Controller(OAuth2AuthenticationService oAuth2AuthenticationService, UserProfileService userProfileService,PaycoAdapter paycoAdapter,TokenService tokenService,ObjectMapper objectMapper,AuthenticationManager authenticationManager) {
 		this.oAuth2AuthenticationService = oAuth2AuthenticationService;
 		this.userProfileService = userProfileService;
 		this.paycoAdapter = paycoAdapter;
 		this.tokenService = tokenService;
+		this.objectMapper = objectMapper;
+		this.authenticationManager = authenticationManager;
 	}
 	@PostMapping("/auth/oauth2/callback")
-	public ApiResponse<Void> handleOAuth2Redirect(@RequestBody String code) {
+	public ApiResponse<Void> handleOAuth2Redirect(@RequestBody String code) throws Exception {
 
-		// 사용자 프로필 정보 획득
 		JsonNode jsonNode = oAuth2AuthenticationService.getToken(code).block();
 		String client_id = "3RDUR8qJyORVrsI2PdkInS1";
 		String access_token = Objects.requireNonNull(jsonNode).get("access_token").asText();
-		//여기까지는 된다. accessToken가져오는거까지는 됌..
-		//headerparameter에 넘긴다.
+
 		JsonNode returnData = oAuth2AuthenticationService.getUserDate(client_id,access_token).block();
 		System.out.println(returnData);
 		UserProfile userProfile = new UserProfile(returnData);
 
-		//이 정보를 가지고 멤버를 만들어야함...
 		MemberAuthResponse response =paycoAdapter.oauthMember(userProfile);
-		// @NotNull String email,
-		// @NotNull String password,
-		// @NotNull List<String> auth,
-		// @NotNull Long memberId
+
+		CustomUserDetails customUserDetails = new CustomUserDetails(response);
+		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(customUserDetails,null,customUserDetails.getAuthorities());
+		SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
 
-		//요거로 토큰만든다음 헤더에 넣고 보낸다.
+		List<String> tokens = tokenService.generateToken(response.email(), response.auth(), response.memberId());
+		String access = tokens.get(0);
+		String refresh = tokens.get(1);
 
-		//발급한 토큰을 header로 보내야하려나? 어캐 넘기지..
-		// 최종 페이지로 리디렉션//아마 gateway로 넘긴다...?그리고 최종페이지로 가는 요청 만들어야할듯?
-		return new ApiResponse<>(new ApiResponse.Header(true,200,"Hi"));
+
+		HttpServletResponse servletResponse = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+		if (servletResponse != null) {
+			servletResponse.addHeader("Authorization", "Bearer " + access);
+			servletResponse.addCookie(CookieUtil.createCookie("Refresh", refresh));
+			servletResponse.setStatus(HttpStatus.OK.value());
+
+			ApiResponse<LoginResponse> apiResponse = ApiResponse.success(new LoginResponse("인증 성공"));
+			servletResponse.setStatus(HttpServletResponse.SC_OK);
+			servletResponse.setContentType("application/json;charset=UTF-8");
+			servletResponse.getWriter().write(objectMapper.writeValueAsString(apiResponse));
+		}
+
+
+		return new ApiResponse<>(new ApiResponse.Header(true,200));
 	}
 }
