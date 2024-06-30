@@ -14,6 +14,9 @@ import com.nhnacademy.auth.dto.TokenDetails;
 import com.nhnacademy.auth.service.TokenService;
 import com.nhnacademy.auth.util.JWTUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class TokenServiceImpl implements TokenService {
 	private final String TOKEN_DETAILS = "token_details";
@@ -34,6 +37,7 @@ public class TokenServiceImpl implements TokenService {
 	@Override
 	public List<String> generateToken(String username, List<String> auths, Long memberId) {
 		String uuid = UUID.randomUUID().toString();
+		log.error("새로운 uuid: {}", uuid);
 
 		TokenDetails tokenDetails = new TokenDetails(username, auths, memberId);
 		try {

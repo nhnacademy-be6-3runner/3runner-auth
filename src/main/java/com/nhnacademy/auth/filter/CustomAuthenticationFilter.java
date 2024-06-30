@@ -52,17 +52,11 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws
 		AuthenticationException {
 		LoginRequest loginRequest = null;
-		// ApiResponse<LoginRequest> resp = null;
 		try {
-			// TypeReference<ApiResponse<LoginRequest>> typeRef = new TypeReference<ApiResponse<LoginRequest>>() {
-			// };
 			loginRequest = objectMapper.readValue(request.getInputStream(), LoginRequest.class);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-
-		// LoginRequest loginRequest = resp.getBody().getData();
-
 		UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginRequest.email(),
 			loginRequest.password());
 		return authenticationManager.authenticate(authToken);
