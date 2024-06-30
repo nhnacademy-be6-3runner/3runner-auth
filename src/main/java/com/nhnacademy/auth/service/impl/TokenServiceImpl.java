@@ -21,8 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 public class TokenServiceImpl implements TokenService {
 	private final String TOKEN_DETAILS = "token_details";
 	private final String REFRESH_TOKEN = "refresh_token";
-	private final Long ACCESS_TOKEN_TTL = 6000L; // 60 * 60 * 1000 = 3600000L
-	private final Long REFRESH_TOKEN_TTL = 86400000L;
+	private final Long ACCESS_TOKEN_TTL = 3600000L; // 60 * 60 * 1000 = 3600000L
+	private final Long REFRESH_TOKEN_TTL = 604800000L; // 7 * 24 * 60 * 60 * 1000
 	private final JWTUtil jwtUtil;
 
 	private final RedisTemplate<String, Object> redisTemplate;
