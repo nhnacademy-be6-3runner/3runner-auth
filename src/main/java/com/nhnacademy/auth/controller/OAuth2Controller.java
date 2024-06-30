@@ -82,6 +82,7 @@ public class OAuth2Controller {
 
 
 		HttpServletResponse servletResponse = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+
 		if (servletResponse != null) {
 			servletResponse.addHeader("Authorization", "Bearer " + access);
 			servletResponse.addCookie(CookieUtil.createCookie("Refresh", refresh));
@@ -92,7 +93,6 @@ public class OAuth2Controller {
 			servletResponse.setContentType("application/json;charset=UTF-8");
 			servletResponse.getWriter().write(objectMapper.writeValueAsString(apiResponse));
 		}
-
 
 		return new ApiResponse<>(new ApiResponse.Header(true,200));
 	}
