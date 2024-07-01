@@ -97,12 +97,16 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 	@Override
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
 		AuthenticationException failed) throws IOException, ServletException {
-		// 인증 실패 시 응답 객체 생성
-		ApiResponse<LoginResponse> apiResponse = ApiResponse.fail(HttpServletResponse.SC_UNAUTHORIZED,
-			new ApiResponse.Body<>(new LoginResponse("인증 실패")));
+		response.setStatus(HttpStatus.UNAUTHORIZED.value());
 
-		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-		response.setContentType("application/json;charset=UTF-8");
-		response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
+		// TODO 프론트 서버에는 그냥 500 에러로 뜬다.
+		// 인증 실패 시 응답 객체 생성
+		// ApiResponse<ErrorResponseForm> apiResponse = ApiResponse.fail(HttpServletResponse.SC_UNAUTHORIZED,
+		// 	new ApiResponse.Body<>(ErrorResponseForm.builder()
+		// 		.title("이메일, 패스워드가 유효하지 않습니다.")
+		// 		.status(HttpServletResponse.SC_UNAUTHORIZED)
+		// 		.timestamp(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toString())
+		// 		.build()));
+		//
 	}
 }
