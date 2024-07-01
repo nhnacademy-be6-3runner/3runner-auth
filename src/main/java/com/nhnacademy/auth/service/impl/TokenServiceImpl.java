@@ -18,7 +18,7 @@ import com.nhnacademy.auth.util.JWTUtil;
 public class TokenServiceImpl implements TokenService {
 	private final String TOKEN_DETAILS = "token_details";
 	private final String REFRESH_TOKEN = "refresh_token";
-	private final Long ACCESS_TOKEN_TTL = 6000L; // 60 * 60 * 1000 = 3600000L
+	private final Long ACCESS_TOKEN_TTL = 600000*1L; // 60 * 60 * 1000 = 3600000L
 	private final Long REFRESH_TOKEN_TTL = 86400000L;
 	private final JWTUtil jwtUtil;
 
