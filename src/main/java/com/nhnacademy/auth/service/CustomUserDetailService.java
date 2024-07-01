@@ -30,10 +30,6 @@ public class CustomUserDetailService implements UserDetailsService {
 		ApiResponse<MemberAuthResponse> response = null;
 		try {
 			response = loginAdapter.memberLogin(new MemberAuthRequest(email));
-			// if (response.getHeader().getResultCode() == HttpStatus.UNAUTHORIZED.value()) {
-			// 	log.warn("token 만료");
-			//
-			// }
 		} catch (Exception e) {
 			throw new UsernameNotFoundException("이메일로 멤버를 찾을 수 없다.");
 		}

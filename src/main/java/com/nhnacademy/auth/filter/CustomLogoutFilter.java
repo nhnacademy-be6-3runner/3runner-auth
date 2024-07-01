@@ -17,6 +17,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 커스텀한 로그아웃 필터
+ * /auth/logout 경로로 들어오면 로그아웃 진행
+ *
+ * @author 오연수
+ */
 @RequiredArgsConstructor
 public class CustomLogoutFilter extends GenericFilterBean {
 	private final JWTUtil jwtUtil;
@@ -40,11 +46,11 @@ public class CustomLogoutFilter extends GenericFilterBean {
 			return;
 		}
 		String requestMethod = request.getMethod();
-		// if (!requestMethod.equals("POST")) {
-		//
-		// 	filterChain.doFilter(request, response);
-		// 	return;
-		// }
+		if (!requestMethod.equals("POST")) {
+
+			filterChain.doFilter(request, response);
+			return;
+		}
 
 		String refresh = null;
 		Cookie[] cookies = request.getCookies();
@@ -79,7 +85,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
 			return;
 		}
 
-		//DB에 저장되어 있는지 확인
+		//redis 에 있는지 확인
 		String uuid = jwtUtil.getUuid(refresh);
 		Boolean isExist = tokenService.existsRefreshToken(uuid, refresh);
 		if (!isExist) {

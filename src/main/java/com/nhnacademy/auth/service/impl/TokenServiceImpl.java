@@ -16,6 +16,11 @@ import com.nhnacademy.auth.util.JWTUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 토큰 서비스 구현체
+ *
+ * @author 오연수
+ */
 @Slf4j
 @Service
 public class TokenServiceImpl implements TokenService {

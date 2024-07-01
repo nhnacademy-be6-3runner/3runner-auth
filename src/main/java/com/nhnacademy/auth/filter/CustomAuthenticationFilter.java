@@ -30,7 +30,7 @@ import jakarta.servlet.http.HttpServletResponse;
  * 커스텀한 인증 필터
  * /auth/login 경로로 들어오면 동작한다.
  * email, password 로 로그인 동작하며,
- * 성공 시 JWT 생성 후 응답 헤더에 Authorization Header 가 추가된다.
+ * 성공 시 JWT 생성 후 응답 헤더에 Authorization Header 와 Refresh cookie 가 추가된다.
  *
  * @author 오연수
  */

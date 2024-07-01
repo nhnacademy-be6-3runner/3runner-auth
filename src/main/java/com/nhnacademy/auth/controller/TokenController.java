@@ -21,6 +21,11 @@ import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 토큰 컨트롤러
+ *
+ * @author 오연수
+ */
 @Slf4j
 @RestController
 @RequestMapping("/auth")
@@ -30,6 +35,14 @@ public class TokenController {
 	@Autowired
 	private TokenService tokenService;
 
+	/**
+	 * 토큰을 재발급한다.
+	 *
+	 *
+	 * @param refreshRequest 리프레시 토큰
+	 * @param response HttpServletResponse
+	 * @return 액세스 토큰
+	 */
 	@PostMapping("/reissue")
 	public ApiResponse<RefreshResponse> reissue(@RequestBody RefreshRequest refreshRequest,
 		HttpServletResponse response) {
@@ -46,7 +59,7 @@ public class TokenController {
 			jwtUtil.isExpired(refresh);
 		} catch (ExpiredJwtException e) {
 			return ApiResponse.badRequestFail(
-				new ApiResponse.Body<>(new RefreshResponse("refresh token expired", null)));
+				new ApiResponse.Body<>(new RefreshResponse("리프레시 토큰 만료", null)));
 		}
 
 		// 토큰이 refresh 인지 확인 (발급시 페이로드에 명시)
@@ -54,7 +67,7 @@ public class TokenController {
 
 		if (!category.equals("REFRESH")) {
 			return ApiResponse.badRequestFail(
-				new ApiResponse.Body<>(new RefreshResponse("invalid refresh token", null)));
+				new ApiResponse.Body<>(new RefreshResponse("유효하지 않은 리프레시 토큰", null)));
 		}
 
 		String uuid = jwtUtil.getUuid(refresh);
@@ -63,7 +76,7 @@ public class TokenController {
 		if (!tokenService.existsRefreshToken(uuid, refresh)) {
 
 			return ApiResponse.badRequestFail(
-				new ApiResponse.Body<>(new RefreshResponse("invalid refresh token", null)));
+				new ApiResponse.Body<>(new RefreshResponse("유효하지 않은 리프레시 토큰", null)));
 		}
 
 		TokenDetails tokenDetails = null;
@@ -73,8 +86,7 @@ public class TokenController {
 		// 기존 uuid 삭제
 		tokenService.deleteRefreshToken(uuid);
 		tokenService.deleteTokenDetail(uuid);
-		log.error("기존 uuid: {}", uuid);
-		log.error("redis에서 삭제");
+		log.error("기존 uuid redis 삭제: {} ", uuid);
 
 		// make new Access token
 		List<String> tokens = tokenService.generateToken(tokenDetails.getEmail(), tokenDetails.getAuths(),
@@ -82,7 +94,7 @@ public class TokenController {
 
 		// TODO 블랙리스트
 
-		// jwt 생성후 헤더에 붙여준다.
+		// jwt 생성후 헤더와 쿠키에 붙여준다.
 		response.addHeader("Authorization", "Bearer " + tokens.getFirst());
 		response.addCookie(CookieUtil.createCookie("Refresh", tokens.getLast()));
 		response.setStatus(HttpStatus.OK.value());
