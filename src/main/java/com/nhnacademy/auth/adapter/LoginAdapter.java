@@ -11,7 +11,7 @@ import com.nhnacademy.auth.util.ApiResponse;
 /**
  * OpenFeign 사용한 로그인 어댑터
  */
-@FeignClient(url = "http://localhost:8080/bookstore", name = "LoginAdapter")
+@FeignClient(url = "${feign.client.url}/bookstore", name = "LoginAdapter")
 public interface LoginAdapter {
 	/**
 	 * Member login api response.

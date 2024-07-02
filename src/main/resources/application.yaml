@@ -40,15 +40,10 @@ spring:
       port: 6379
       database: 15
       password: "*N2vya7H@muDTwdNMR!"
+  profiles:
+    active: prod
 
-eureka:
-  client:
-    fetch-registry: true
-    register-with-eureka: true
-    service-url:
-      defaultZone: http://admin:1234@localhost:8761/eureka
-  instance:
-    prefer-ip-address: true
+
 
 management:
   endpoint:
