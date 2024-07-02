@@ -24,10 +24,12 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nhnacademy.auth.adapter.LoginAdapter;
 import com.nhnacademy.auth.adapter.PaycoAdapter;
 import com.nhnacademy.auth.dto.CustomUserDetails;
 import com.nhnacademy.auth.dto.response.LoginResponse;
 import com.nhnacademy.auth.dto.response.MemberAuthResponse;
+
 import com.nhnacademy.auth.entity.UserProfile;
 import com.nhnacademy.auth.service.OAuth2AuthenticationService;
 import com.nhnacademy.auth.service.TokenService;
@@ -59,7 +61,7 @@ public class OAuth2Controller {
 		this.authenticationManager = authenticationManager;
 	}
 	@PostMapping("/auth/oauth2/callback")
-	public ApiResponse<Void> handleOAuth2Redirect(@RequestBody String code) throws Exception {
+	public ApiResponse<LoginResponse> handleOAuth2Redirect(@RequestBody String code) throws Exception {
 
 		JsonNode jsonNode = oAuth2AuthenticationService.getToken(code).block();
 		String client_id = "3RDUR8qJyORVrsI2PdkInS1";
@@ -91,9 +93,13 @@ public class OAuth2Controller {
 			ApiResponse<LoginResponse> apiResponse = ApiResponse.success(new LoginResponse("인증 성공"));
 			servletResponse.setStatus(HttpServletResponse.SC_OK);
 			servletResponse.setContentType("application/json;charset=UTF-8");
-			servletResponse.getWriter().write(objectMapper.writeValueAsString(apiResponse));
-		}
 
-		return new ApiResponse<>(new ApiResponse.Header(true,200));
+			// 헤더와 쿠키가 추가되었는지 확인
+			System.out.println(servletResponse);
+
+			return apiResponse;
+		}
+		return  ApiResponse.fail(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+			new ApiResponse.Body<>(new LoginResponse("인증 실패")));
 	}
 }

@@ -36,7 +36,7 @@ spring:
       ddl-auto: update
   data:
     redis:
-      host: 133.186.143.40
+      host: 133.186.241.167
       port: 6379
       database: 15
       password: "*N2vya7H@muDTwdNMR!"
