@@ -8,5 +8,5 @@ import lombok.Builder;
  * Front server 로부터 받는 Login Request DTO
  */
 @Builder
-public record LoginRequest(@Email @NotNull String email, @NotNull String password) {
+public record LoginRequest(String email, String password) {
 }
