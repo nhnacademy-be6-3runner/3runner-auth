@@ -9,7 +9,7 @@ import com.nhnacademy.auth.entity.UserProfile;
 
 import jakarta.validation.Valid;
 
-@FeignClient(url = "http://localhost:8080/bookstore",name = "PaycoAdapter")
+@FeignClient(url = "${feign.client.url}/bookstore",name = "PaycoAdapter")
 public interface PaycoAdapter {
 	@PostMapping("/members/oauth")
 	MemberAuthResponse oauthMember(@RequestBody @Valid UserProfile userProfile);
