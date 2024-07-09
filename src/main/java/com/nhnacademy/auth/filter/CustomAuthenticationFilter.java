@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,8 +13,12 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nhnacademy.auth.MemberService;
+import com.nhnacademy.auth.adapter.MemberAdapter;
 import com.nhnacademy.auth.dto.CustomUserDetails;
 import com.nhnacademy.auth.dto.request.LoginRequest;
 import com.nhnacademy.auth.dto.response.LoginResponse;
@@ -22,6 +27,7 @@ import com.nhnacademy.auth.util.ApiResponse;
 import com.nhnacademy.auth.util.CookieUtil;
 
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -39,13 +45,16 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 	private final AuthenticationManager authenticationManager;
 	private final ObjectMapper objectMapper;
 	private final TokenService tokenService;
+	private final MemberService memberService;
+
 
 	public CustomAuthenticationFilter(AuthenticationManager authenticationManager,
-		ObjectMapper objectMapper, TokenService tokenService) {
+		ObjectMapper objectMapper, TokenService tokenService, MemberService memberService) {
 		this.authenticationManager = authenticationManager;
 		this.objectMapper = objectMapper;
 		this.tokenService = tokenService;
 		this.setFilterProcessesUrl("/auth/login");
+		this.memberService = memberService;
 	}
 
 	@Override
@@ -90,6 +99,8 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		response.setStatus(HttpServletResponse.SC_OK);
 		response.setContentType("application/json;charset=UTF-8");
 		response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
+
+		memberService.setLastLogin(memberId);
 
 		SecurityContextHolder.getContext().setAuthentication(authResult);
 	}

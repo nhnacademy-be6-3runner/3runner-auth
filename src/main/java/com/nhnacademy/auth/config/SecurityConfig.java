@@ -14,6 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nhnacademy.auth.MemberService;
 import com.nhnacademy.auth.filter.CustomAuthenticationFilter;
 import com.nhnacademy.auth.filter.CustomLogoutFilter;
 import com.nhnacademy.auth.service.TokenService;
@@ -27,13 +28,15 @@ public class SecurityConfig {
 	private final ObjectMapper objectMapper;
 	private final TokenService tokenService;
 	private final JWTUtil jwtUtil;
+	private final MemberService memberService;
 
 	public SecurityConfig(AuthenticationConfiguration authenticationConfiguration,
-		ObjectMapper objectMapper, TokenService tokenService, JWTUtil jwtUtil) {
+		ObjectMapper objectMapper, TokenService tokenService, JWTUtil jwtUtil, MemberService memberService) {
 		this.authenticationConfiguration = authenticationConfiguration;
 		this.objectMapper = objectMapper;
 		this.tokenService = tokenService;
 		this.jwtUtil = jwtUtil;
+		this.memberService = memberService;
 	}
 
 	@Bean
@@ -62,7 +65,7 @@ public class SecurityConfig {
 
 		http
 			.addFilterAt(new CustomAuthenticationFilter(authenticationManager(authenticationConfiguration),
-				objectMapper, tokenService), UsernamePasswordAuthenticationFilter.class);
+				objectMapper, tokenService, memberService), UsernamePasswordAuthenticationFilter.class);
 
 		http
 			.addFilterBefore(new CustomLogoutFilter(jwtUtil, tokenService), LogoutFilter.class);
