@@ -88,6 +88,13 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		String access = tokens.get(0);
 		String refresh = tokens.get(1);
 
+		ApiResponse<Void> result= memberService.setLastLogin(memberId);//만약에 휴먼일 경우 lastlogin이 변경되지 않고 그냥 결과가 false로 반환된다.
+		//폼에...비밀정보를 받을 수있으려나...
+		if(!result.getHeader().isSuccessful()){
+			//dormant 에다가 값들 넣는다. 아이디랑, uuid랑, access값이랑 refresh값이랑 들어가게 된다.//휴먼 계정일 경우
+			continue;
+		}
+
 		// jwt 생성후 헤더에 붙여준다.
 		response.addHeader("Authorization", "Bearer " + access);
 		response.addCookie(CookieUtil.createCookie("Refresh", refresh));
@@ -100,7 +107,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		response.setContentType("application/json;charset=UTF-8");
 		response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
 
-		memberService.setLastLogin(memberId);
+
 
 		SecurityContextHolder.getContext().setAuthentication(authResult);
 	}
