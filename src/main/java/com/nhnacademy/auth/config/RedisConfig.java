@@ -24,20 +24,5 @@ public class RedisConfig {
 		sessionRedisTemplate.setHashValueSerializer(new StringRedisSerializer());
 		return sessionRedisTemplate;
 	}
-	@Bean
-	public RedisTemplate<String, String> dormantRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
-			RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
-			redisTemplate.setConnectionFactory(redisConnectionFactory);
-
-			// 모든 데이터를 문자열(String)로 직렬화하여 저장하기 위한 설정
-			redisTemplate.setKeySerializer(new StringRedisSerializer());
-			redisTemplate.setValueSerializer(new StringRedisSerializer());
-
-			redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-			redisTemplate.setHashValueSerializer(new StringRedisSerializer());
-
-			return redisTemplate;
-
-	}
 
 }

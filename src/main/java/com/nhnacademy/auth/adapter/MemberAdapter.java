@@ -17,4 +17,6 @@ public interface MemberAdapter {
 
 	@PutMapping("/members/lastLogin")
 	ApiResponse<Void> lastLoginUpdate(@RequestBody Long memberId);
+	@PutMapping("/bookstore/members/lastLogin/dormantAwake")
+		ApiResponse<java.lang.Void> dormantAwake(@RequestBody String email);
 }

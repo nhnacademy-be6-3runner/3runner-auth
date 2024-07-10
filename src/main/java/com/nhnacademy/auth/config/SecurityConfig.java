@@ -15,8 +15,10 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.auth.MemberService;
+import com.nhnacademy.auth.adapter.DoorayAdapter;
 import com.nhnacademy.auth.filter.CustomAuthenticationFilter;
 import com.nhnacademy.auth.filter.CustomLogoutFilter;
+import com.nhnacademy.auth.service.DormantService;
 import com.nhnacademy.auth.service.TokenService;
 import com.nhnacademy.auth.util.JWTUtil;
 
@@ -29,14 +31,17 @@ public class SecurityConfig {
 	private final TokenService tokenService;
 	private final JWTUtil jwtUtil;
 	private final MemberService memberService;
-
+	private final DormantService dormantService;
+	private final DoorayAdapter doorayAdapter;
 	public SecurityConfig(AuthenticationConfiguration authenticationConfiguration,
-		ObjectMapper objectMapper, TokenService tokenService, JWTUtil jwtUtil, MemberService memberService) {
+		ObjectMapper objectMapper, TokenService tokenService, JWTUtil jwtUtil, MemberService memberService,DormantService dormantService,DoorayAdapter doorayAdapter) {
 		this.authenticationConfiguration = authenticationConfiguration;
 		this.objectMapper = objectMapper;
 		this.tokenService = tokenService;
 		this.jwtUtil = jwtUtil;
 		this.memberService = memberService;
+		this.dormantService = dormantService;
+		this.doorayAdapter = doorayAdapter;
 	}
 
 	@Bean
@@ -65,7 +70,7 @@ public class SecurityConfig {
 
 		http
 			.addFilterAt(new CustomAuthenticationFilter(authenticationManager(authenticationConfiguration),
-				objectMapper, tokenService, memberService), UsernamePasswordAuthenticationFilter.class);
+				objectMapper, tokenService, memberService,dormantService,doorayAdapter), UsernamePasswordAuthenticationFilter.class);
 
 		http
 			.addFilterBefore(new CustomLogoutFilter(jwtUtil, tokenService), LogoutFilter.class);
