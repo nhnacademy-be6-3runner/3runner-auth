@@ -4,8 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nhnacademy.auth.adapter.MemberAdapter;
-
-
+import com.nhnacademy.auth.util.ApiResponse;
 
 @Service
 public class MemberService {
@@ -17,11 +16,9 @@ public class MemberService {
 		this.memberAdapter = memberAdapter;
 	}
 
-	public void setLastLogin(Long userId) {
-		try {
-			memberAdapter.lastLoginUpdate(userId);;
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
+	public ApiResponse<Void> setLastLogin(Long userId) {
+
+		return memberAdapter.lastLoginUpdate(userId);
+
 	}
 }
