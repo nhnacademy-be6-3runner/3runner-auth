@@ -1,9 +1,11 @@
 package com.nhnacademy.auth.filter;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,16 +14,24 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nhnacademy.auth.MemberService;
+import com.nhnacademy.auth.adapter.DoorayAdapter;
+import com.nhnacademy.auth.adapter.MemberAdapter;
 import com.nhnacademy.auth.dto.CustomUserDetails;
 import com.nhnacademy.auth.dto.request.LoginRequest;
 import com.nhnacademy.auth.dto.response.LoginResponse;
+import com.nhnacademy.auth.entity.MessagePayload;
+import com.nhnacademy.auth.service.DormantService;
 import com.nhnacademy.auth.service.TokenService;
 import com.nhnacademy.auth.util.ApiResponse;
 import com.nhnacademy.auth.util.CookieUtil;
 
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -39,13 +49,19 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 	private final AuthenticationManager authenticationManager;
 	private final ObjectMapper objectMapper;
 	private final TokenService tokenService;
+	private final MemberService memberService;
+	private final DormantService dormantService;
+	private final DoorayAdapter doorayAdapter;
 
 	public CustomAuthenticationFilter(AuthenticationManager authenticationManager,
-		ObjectMapper objectMapper, TokenService tokenService) {
+		ObjectMapper objectMapper, TokenService tokenService, MemberService memberService,DormantService dormantService, DoorayAdapter doorayAdapter) {
 		this.authenticationManager = authenticationManager;
 		this.objectMapper = objectMapper;
 		this.tokenService = tokenService;
 		this.setFilterProcessesUrl("/auth/login");
+		this.memberService = memberService;
+		this.dormantService = dormantService;
+		this.doorayAdapter = doorayAdapter;
 	}
 
 	@Override
@@ -79,19 +95,38 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		String access = tokens.get(0);
 		String refresh = tokens.get(1);
 
-		// jwt 생성후 헤더에 붙여준다.
-		response.addHeader("Authorization", "Bearer " + access);
-		response.addCookie(CookieUtil.createCookie("Refresh", refresh));
-		response.setStatus(HttpStatus.OK.value());
-
-		// 인증 성공 시 응답 객체 생성
-		ApiResponse<LoginResponse> apiResponse = ApiResponse.success(new LoginResponse("인증 성공"));
-
-		response.setStatus(HttpServletResponse.SC_OK);
-		response.setContentType("application/json;charset=UTF-8");
-		response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
-
 		SecurityContextHolder.getContext().setAuthentication(authResult);
+
+		ApiResponse<Void> result= memberService.setLastLogin(memberId);//만약에 휴먼일 경우 lastlogin이 변경되지 않고 그냥 결과가 false로 반환된다.
+		//폼에...비밀정보를 받을 수있으려나...
+		ApiResponse<LoginResponse> apiResponse;
+		if(!result.getHeader().isSuccessful()){
+
+			dormantService.saveVerificationCode(username,access,refresh);
+			//dormant 에다가 값들 넣는다. 아이디랑, uuid랑, access값이랑 refresh값이랑 들어가게 된다.//휴먼 계정일 경우
+
+			response.addHeader("Authorization","Bearer "+"WakeDormantAccount");
+			response.addCookie(CookieUtil.createCookie("Refresh","WakeDormantAccount"));
+			response.setStatus(HttpStatus.OK.value());
+			apiResponse = ApiResponse.success(new LoginResponse("휴면 계정"));
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.setContentType("application/json;charset=UTF-8");
+
+
+		}else{
+			response.addHeader("Authorization","Bearer "+access);
+			response.addCookie(CookieUtil.createCookie("Refresh",refresh));
+			response.setStatus(HttpStatus.OK.value());
+			apiResponse = ApiResponse.success(new LoginResponse("인증 성공"));
+
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.setContentType("application/json;charset=UTF-8");
+
+		}
+
+		response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
+		// 인증 성공 시 응답 객체 생성
+
 	}
 
 	@Override
