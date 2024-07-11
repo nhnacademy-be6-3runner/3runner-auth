@@ -13,6 +13,7 @@ import com.nhnacademy.auth.MemberService;
 import com.nhnacademy.auth.adapter.MemberAdapter;
 import com.nhnacademy.auth.adapter.PaycoAdapter;
 import com.nhnacademy.auth.dto.request.DormantRequest;
+import com.nhnacademy.auth.dto.response.DormantResponse;
 import com.nhnacademy.auth.dto.response.LoginResponse;
 import com.nhnacademy.auth.entity.DormantObject;
 import com.nhnacademy.auth.service.DormantService;
@@ -36,24 +37,13 @@ public class DormantController {
 	}
 
 	@PostMapping("/auth/dormant")
-	public ApiResponse<Void> dormantCheck(@RequestBody DormantRequest request) {
+	public ApiResponse<DormantResponse> dormantCheck(@RequestBody DormantRequest request) {
 		DormantObject resultObject = dormantService.checkVerificationCode(request.email(), request.code());
 		if (resultObject != null) {
-			HttpServletResponse servletResponse = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
-			//여기다가 애들 해줘야하ㄹㅁㄷㅈㅁㄷㅈㄹㄷㅈㅁㄹ
-			if (servletResponse != null) {
-				servletResponse.addHeader("Authorization", "Bearer " + resultObject.getAccess());
-				servletResponse.addCookie(CookieUtil.createCookie("Refresh", resultObject.getRefresh()));
-				servletResponse.setStatus(HttpStatus.OK.value());
+			DormantResponse response = DormantResponse.builder().access(resultObject.getAccess()).refresh(resultObject.getRefresh()).build();
 
-				servletResponse.setStatus(HttpServletResponse.SC_OK);
-				servletResponse.setContentType("application/json;charset=UTF-8");
-				memberAdapter.dormantAwake(request.email());
+				return ApiResponse.success(response);
 
-				return ApiResponse.success(null);
-			}else{
-				return ApiResponse.fail(400,null);
-			}
 		} else {
 			return ApiResponse.fail(400,null);
 		}

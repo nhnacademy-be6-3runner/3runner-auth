@@ -55,7 +55,7 @@ public class DormantServiceImpl implements DormantService {
 			existingDormantObject.setUuid(uuid);
 
 			MessagePayload messagePayload = new MessagePayload("인증번호", "", uuid, null);
-			String string = doorayAdapter.sendMessage(messagePayload,3204376758577275363L,3844408408415804517L,"YkYZu-bxRtiDajU7CZbQrw");
+			String string = doorayAdapter.sendMessage(messagePayload,3204376758577275363L,3844395046544334636L,"7Rh_SFmHQAmzRkK7ClGacw");
 
 			dormantTemplate.opsForValue().set(key, existingDormantObject, 3, TimeUnit.MINUTES);
 			log.info("Verification code updated for email: {}", email);
