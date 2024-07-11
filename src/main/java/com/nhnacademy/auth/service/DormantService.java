@@ -15,5 +15,6 @@ public interface DormantService {
 	public String saveVerificationCode(String email, String access, String refresh);
 	public DormantObject getVerificationCode(String memberId);
 	public DormantObject checkVerificationCode(String memberId, String verificationCode);
+	public DormantObject updateVerificationCode(String email);
 }
 

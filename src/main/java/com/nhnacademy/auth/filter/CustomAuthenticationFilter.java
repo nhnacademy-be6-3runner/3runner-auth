@@ -102,35 +102,30 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		ApiResponse<LoginResponse> apiResponse;
 		if(!result.getHeader().isSuccessful()){
 
-			String uuid = dormantService.saveVerificationCode(username,access,refresh);
+			dormantService.saveVerificationCode(username,access,refresh);
 			//dormant 에다가 값들 넣는다. 아이디랑, uuid랑, access값이랑 refresh값이랑 들어가게 된다.//휴먼 계정일 경우
 
-			MessagePayload messagePayload = new MessagePayload("인증번호", "", uuid, Arrays.asList(new MessagePayload.Attachment()));
-			String string = doorayAdapter.sendMessage(messagePayload,3204376758577275363L,3844408408415804517L,"YkYZu-bxRtiDajU7CZbQrw");
-
-			apiResponse = ApiResponse.success(new LoginResponse("휴먼 계정"));
-			response.setContentType("application/json;charset=UTF-8");
-			response.addHeader("Authorization", "Bearer " + "Wake Dormant Account");
-			response.addCookie(CookieUtil.createCookie("Refresh", "Wake Dormant Account"));
+			response.addHeader("Authorization","Bearer "+"WakeDormantAccount");
+			response.addCookie(CookieUtil.createCookie("Refresh","WakeDormantAccount"));
+			response.setStatus(HttpStatus.OK.value());
+			apiResponse = ApiResponse.success(new LoginResponse("휴면 계정"));
 			response.setStatus(HttpServletResponse.SC_OK);
-			response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
+			response.setContentType("application/json;charset=UTF-8");
+
 
 		}else{
+			response.addHeader("Authorization","Bearer "+access);
+			response.addCookie(CookieUtil.createCookie("Refresh",refresh));
+			response.setStatus(HttpStatus.OK.value());
 			apiResponse = ApiResponse.success(new LoginResponse("인증 성공"));
 
-			response.setContentType("application/json;charset=UTF-8");
-			response.addHeader("Authorization", "Bearer " + access);
-			response.addCookie(CookieUtil.createCookie("Refresh", refresh));
 			response.setStatus(HttpServletResponse.SC_OK);
-			response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
+			response.setContentType("application/json;charset=UTF-8");
+
 		}
+
+		response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
 		// 인증 성공 시 응답 객체 생성
-
-
-
-
-
-
 
 	}
 

@@ -59,6 +59,15 @@ public class DormantController {
 		}
 
 	}
+	@PostMapping("/auth/dormant/resend")
+	ApiResponse<Void> resendDormant(@RequestBody String email) {
+		try {
+			dormantService.updateVerificationCode(email);
+			return ApiResponse.success(null);
+		}catch (Exception e) {
+			return ApiResponse.fail(400,null);
+		}
+	}
 }
 
 

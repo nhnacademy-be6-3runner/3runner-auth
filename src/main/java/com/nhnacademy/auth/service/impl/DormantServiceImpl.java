@@ -1,5 +1,6 @@
 package com.nhnacademy.auth.service.impl;
 
+import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -7,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import com.nhnacademy.auth.adapter.DoorayAdapter;
 import com.nhnacademy.auth.entity.DormantObject;
+import com.nhnacademy.auth.entity.MessagePayload;
 import com.nhnacademy.auth.service.DormantService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -17,17 +20,17 @@ public class DormantServiceImpl implements DormantService {
 	private static final String MEMBER_PREFIX = "email:";
 	@Autowired
 	private RedisTemplate<String, Object> dormantTemplate;
-
+	@Autowired
+	private DoorayAdapter doorayAdapter;
 	public String saveVerificationCode(String email, String access, String refresh){
-		String uuid = UUID.randomUUID().toString();
 		String key = MEMBER_PREFIX + email;
 		DormantObject dormantObject = new DormantObject();
-		dormantObject.setUuid(uuid);
+		dormantObject.setUuid(null);
 		dormantObject.setAccess(access);
 		dormantObject.setRefresh(refresh);
-		dormantTemplate.opsForValue().set(key, dormantObject, 3, TimeUnit.MINUTES);
+		dormantTemplate.opsForValue().set(key, dormantObject);
 		log.info("Verification code saved for email: {}", email);
-		return uuid;
+		return null;
 	}
 	public DormantObject getVerificationCode(String email){
 		String key = MEMBER_PREFIX + email;
@@ -43,5 +46,23 @@ public class DormantServiceImpl implements DormantService {
 		};
 		return null;
 	}//비교값 넣어준다.
+	public DormantObject updateVerificationCode(String email) {
+		String key = MEMBER_PREFIX + email;
+		DormantObject existingDormantObject = getVerificationCode(email);
+		if (existingDormantObject != null) {
+			// Update UUID and reset expiration time
+			String uuid = UUID.randomUUID().toString();
+			existingDormantObject.setUuid(uuid);
+
+			MessagePayload messagePayload = new MessagePayload("인증번호", "", uuid, null);
+			String string = doorayAdapter.sendMessage(messagePayload,3204376758577275363L,3844408408415804517L,"YkYZu-bxRtiDajU7CZbQrw");
+
+			dormantTemplate.opsForValue().set(key, existingDormantObject, 3, TimeUnit.MINUTES);
+			log.info("Verification code updated for email: {}", email);
+
+			return existingDormantObject;
+		}
+		return null;
+	}
 }
 
