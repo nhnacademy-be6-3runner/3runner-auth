@@ -17,9 +17,7 @@ spring:
       database: 15
       password: "*N2vya7H@muDTwdNMR!"
   profiles:
-    active: prod
-
-
+    active: dev
 
 management:
   endpoint:
