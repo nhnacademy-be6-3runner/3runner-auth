@@ -9,11 +9,8 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 public class DormantObject {
-	@JsonProperty("uuid")
 	private String uuid;
-	@JsonProperty("access")
 	private String access;
-	@JsonProperty("refresh")
 	private String refresh;
 
 }
