@@ -41,7 +41,7 @@ public class DormantController {
 		DormantObject resultObject = dormantService.checkVerificationCode(request.email(), request.code());
 		if (resultObject != null) {
 			DormantResponse response = DormantResponse.builder().access(resultObject.getAccess()).refresh(resultObject.getRefresh()).build();
-
+				memberAdapter.dormantAwake(request.email());
 				return ApiResponse.success(response);
 
 		} else {
