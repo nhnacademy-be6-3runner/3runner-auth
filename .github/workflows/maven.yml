@@ -57,9 +57,8 @@ jobs:
           script: |
             cd /home/nhnacademy/auth
             sudo docker build -t auth-image .
-            
-            if sudo docker service ls | grep -q 'auth'; then
-              sudo docker service rm auth
-            fi
-            sudo docker service create --name auth --publish 8090:8080 --network back_network_swarm auth-image
+            sudo docker stop auth || true
+            sudo docker rm auth || true
+            sudo docker build -t auth-image .
+            sudo docker run -d -p 8090:8090 --name auth --net back_network auth-image
 
