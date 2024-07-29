@@ -54,7 +54,6 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd /home/nhnacademy/auth
-            sudo docker build -t auth-image .
             sudo docker stop auth || true
             sudo docker rm auth || true
             sudo docker build -t auth-image .

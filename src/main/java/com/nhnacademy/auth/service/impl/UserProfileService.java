@@ -1,6 +1,5 @@
-package com.nhnacademy.auth.service;
+package com.nhnacademy.auth.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -11,10 +10,11 @@ import reactor.core.publisher.Mono;
 @Service
 public class UserProfileService {
 	private final WebClient webClient;
-	@Autowired
+
 	public UserProfileService(WebClient.Builder webClientBuilder){
 		this.webClient = webClientBuilder.baseUrl("https://apis-payco.krp.toastoven.net").build();
 	}
+
 	public Mono<UserProfile> fetchUserProfile(String token){
 		return webClient.get()
 			.uri("/payco/friends/find_member_v2.json")

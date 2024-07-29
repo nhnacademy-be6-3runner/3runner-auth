@@ -12,7 +12,6 @@ public class DormantObject {
 	private String uuid;
 	private String access;
 	private String refresh;
-
 }
 
 

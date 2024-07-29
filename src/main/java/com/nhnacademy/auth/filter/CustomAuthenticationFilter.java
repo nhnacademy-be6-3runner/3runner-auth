@@ -126,7 +126,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
 		response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
 		// 인증 성공 시 응답 객체 생성
-
 	}
 
 	@Override

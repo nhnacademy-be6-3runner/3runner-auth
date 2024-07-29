@@ -7,20 +7,16 @@ import com.nhnacademy.auth.dto.response.DormantResponse;
 import com.nhnacademy.auth.entity.DormantObject;
 import com.nhnacademy.auth.service.DormantService;
 import com.nhnacademy.auth.util.ApiResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 public class DormantController {
     private final DormantService dormantService;
-
     private final MemberAdapter memberAdapter;
-
-    public DormantController(DormantService dormantService, MemberAdapter memberAdapter) {
-        this.dormantService = dormantService;
-        this.memberAdapter = memberAdapter;
-    }
 
     @PostMapping("/auth/dormant")
     public ApiResponse<DormantResponse> dormantCheck(@RequestBody DormantRequest request) {

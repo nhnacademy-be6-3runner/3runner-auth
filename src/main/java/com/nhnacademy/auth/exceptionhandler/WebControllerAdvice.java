@@ -1,4 +1,4 @@
-package com.nhnacademy.auth.exceptionHandler;
+package com.nhnacademy.auth.exceptionhandler;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;

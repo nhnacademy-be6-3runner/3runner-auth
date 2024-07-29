@@ -1,48 +1,33 @@
 package com.nhnacademy.auth.controller;
 
-import java.net.URI;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nhnacademy.auth.adapter.LoginAdapter;
 import com.nhnacademy.auth.adapter.PaycoAdapter;
 import com.nhnacademy.auth.dto.CustomUserDetails;
 import com.nhnacademy.auth.dto.response.LoginResponse;
 import com.nhnacademy.auth.dto.response.MemberAuthResponse;
 
 import com.nhnacademy.auth.entity.UserProfile;
-import com.nhnacademy.auth.service.OAuth2AuthenticationService;
+import com.nhnacademy.auth.service.impl.OAuth2AuthenticationService;
 import com.nhnacademy.auth.service.TokenService;
-import com.nhnacademy.auth.service.UserProfileService;
+import com.nhnacademy.auth.service.impl.UserProfileService;
 import com.nhnacademy.auth.util.ApiResponse;
 import com.nhnacademy.auth.util.CookieUtil;
-import com.nimbusds.jose.shaded.gson.JsonObject;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import jakarta.validation.constraints.NotNull;
-import reactor.core.publisher.Mono;
 
 @RestController
 public class OAuth2Controller {

@@ -33,6 +33,7 @@ public class SecurityConfig {
 	private final MemberService memberService;
 	private final DormantService dormantService;
 	private final DoorayAdapter doorayAdapter;
+
 	public SecurityConfig(AuthenticationConfiguration authenticationConfiguration,
 		ObjectMapper objectMapper, TokenService tokenService, JWTUtil jwtUtil, MemberService memberService,DormantService dormantService,DoorayAdapter doorayAdapter) {
 		this.authenticationConfiguration = authenticationConfiguration;

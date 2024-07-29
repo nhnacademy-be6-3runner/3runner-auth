@@ -1,6 +1,6 @@
-package com.nhnacademy.auth.service;
+package com.nhnacademy.auth.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,9 +21,9 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class CustomUserDetailService implements UserDetailsService {
-	@Autowired
-	private LoginAdapter loginAdapter;
+	private final LoginAdapter loginAdapter;
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

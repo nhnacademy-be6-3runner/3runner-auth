@@ -2,6 +2,7 @@ package com.nhnacademy.auth.controller;
 
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,12 +29,11 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/auth")
 public class TokenController {
-	@Autowired
-	private JWTUtil jwtUtil;
-	@Autowired
-	private TokenService tokenService;
+	private final JWTUtil jwtUtil;
+	private final TokenService tokenService;
 
 	/**
 	 * 토큰을 재발급한다.
@@ -91,8 +91,6 @@ public class TokenController {
 		// make new Access token
 		List<String> tokens = tokenService.generateToken(tokenDetails.getEmail(), tokenDetails.getAuths(),
 			tokenDetails.getMemberId());
-
-		// TODO 블랙리스트
 
 		// jwt 생성후 헤더와 쿠키에 붙여준다.
 		response.addHeader("Authorization", "Bearer " + tokens.getFirst());

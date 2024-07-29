@@ -1,6 +1,6 @@
-package com.nhnacademy.auth.service;
+package com.nhnacademy.auth.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
@@ -15,14 +15,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import reactor.core.publisher.Mono;
 
 @Service
+@RequiredArgsConstructor
 public class OAuth2AuthenticationService {
-	@Autowired
-	private WebClient webClient;
+	private final WebClient webClient;
 	private final OAuth2AuthorizedClientManager authorizedClientManager;
-
-	public OAuth2AuthenticationService(OAuth2AuthorizedClientManager authorizedClientManager) {
-		this.authorizedClientManager = authorizedClientManager;
-	}
 
 	public OAuth2AccessToken getAccessTokenFromAuthorizationCode(String registrationId, String authorizationCode, Authentication principal, String redirectUri) {
 		OAuth2AuthorizeRequest authorizeRequest = OAuth2AuthorizeRequest.withClientRegistrationId(registrationId)
@@ -30,8 +26,6 @@ public class OAuth2AuthenticationService {
 			attrs.put(OAuth2ParameterNames.REDIRECT_URI,redirectUri);})
 			.principal(principal).build();
 
-
-		// Use the OAuth2AuthorizedClientManager to get the OAuth2AuthorizedClient.
 		OAuth2AuthorizedClient authorizedClient = this.authorizedClientManager.authorize(authorizeRequest);
 
 		if (authorizedClient != null) {
@@ -40,12 +34,13 @@ public class OAuth2AuthenticationService {
 			throw new IllegalStateException("Unable to retrieve access token for client " + registrationId);
 		}
 	}
-	public Mono<JsonNode> getToken(String code){
+
+	public Mono<JsonNode> getToken(String code) {
 		String url = "https://id.payco.com/oauth2.0/token?grant_type=authorization_code&client_id=3RDUR8qJyORVrsI2PdkInS1&client_secret=yoA1FPvf5ievEnC7LkzJDp1x&state=ab42ae&code=" + code;
 		return webClient.get().uri(url).retrieve().bodyToMono(JsonNode.class);
-
 	}
-	public Mono<JsonNode> getUserDate(String clientId,String accessToken){
+
+	public Mono<JsonNode> getUserDate(String clientId,String accessToken) {
 		String url = "https://apis-payco.krp.toastoven.net/payco/friends/find_member_v2.json";
 		return webClient.post().uri(url).header("client_id", clientId).header("access_token", accessToken).retrieve().bodyToMono(JsonNode.class);
 	}

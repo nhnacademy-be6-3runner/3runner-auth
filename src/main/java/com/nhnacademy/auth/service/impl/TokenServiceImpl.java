@@ -4,7 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -23,21 +25,16 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class TokenServiceImpl implements TokenService {
 	private final String TOKEN_DETAILS = "token_details";
 	private final String REFRESH_TOKEN = "refresh_token";
-	private final Long ACCESS_TOKEN_TTL = 3600000L; // 60 * 60 * 1000 = 3600000L
+	private final Long ACCESS_TOKEN_TTL = 3L;
 	private final Long REFRESH_TOKEN_TTL = 604800000L; // 7 * 24 * 60 * 60 * 1000
+
 	private final JWTUtil jwtUtil;
-
 	private final RedisTemplate<String, Object> redisTemplate;
-
-	ObjectMapper objectMapper = new ObjectMapper();
-
-	public TokenServiceImpl(JWTUtil jwtUtil, RedisTemplate<String, Object> redisTemplate) {
-		this.jwtUtil = jwtUtil;
-		this.redisTemplate = redisTemplate;
-	}
+	private final ObjectMapper objectMapper;
 
 	@Override
 	public List<String> generateToken(String username, List<String> auths, Long memberId) {
@@ -50,8 +47,8 @@ public class TokenServiceImpl implements TokenService {
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}
-		// TODO redis expire 설정
-		// redisTemplate.expire(TOKEN_DETAILS, ACCESS_TOKEN_TTL, TimeUnit.MICROSECONDS);
+
+		redisTemplate.expire(TOKEN_DETAILS, ACCESS_TOKEN_TTL, TimeUnit.HOURS);
 
 		String accessToken = jwtUtil.generateTokenWithUuid("ACCESS", uuid, ACCESS_TOKEN_TTL);
 		String refreshToken = jwtUtil.generateTokenWithUuid("REFRESH", uuid, REFRESH_TOKEN_TTL);

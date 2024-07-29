@@ -21,7 +21,6 @@ public class UserProfile {
 	@JsonProperty("name")
 	private String name;
 
-	// 생성자
 	public UserProfile(JsonNode jsonNode) {
 		JsonNode memberNode = jsonNode.path("data").path("member");
 		this.id = memberNode.path("id").asText();
@@ -30,7 +29,6 @@ public class UserProfile {
 		this.mobile = memberNode.path("mobile").asText();
 	}
 
-	// 생성자
 	public UserProfile(String id, String email, String mobile, String name) {
 		this.id = id;
 		this.email = email;

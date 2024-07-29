@@ -16,7 +16,6 @@ public class MessagePayload {
 	private String text;
 	private List<Attachment> attachments;
 
-	// 생성자, getter 및 setter 메서드는 생략했습니다.
 	@Data
 	@NoArgsConstructor
 	public static class Attachment {
@@ -24,7 +23,5 @@ public class MessagePayload {
 		private String titleLink = "http://naver.com";
 		private String text = "text";
 		private String color = "red";
-
-		// 생성자, getter 및 setter 메서드는 생략했습니다.
 	}
 }
