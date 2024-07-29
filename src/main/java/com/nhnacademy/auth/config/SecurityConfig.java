@@ -14,7 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nhnacademy.auth.MemberService;
+import com.nhnacademy.auth.service.impl.MemberService;
 import com.nhnacademy.auth.adapter.DoorayAdapter;
 import com.nhnacademy.auth.filter.CustomAuthenticationFilter;
 import com.nhnacademy.auth.filter.CustomLogoutFilter;

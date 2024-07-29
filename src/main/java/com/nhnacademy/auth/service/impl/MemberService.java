@@ -1,4 +1,4 @@
-package com.nhnacademy.auth;
+package com.nhnacademy.auth.service.impl;
 
 import com.nhnacademy.auth.adapter.MemberAdapter;
 import com.nhnacademy.auth.dto.request.LastLoginRequest;
